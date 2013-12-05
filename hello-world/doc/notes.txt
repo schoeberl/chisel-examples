@@ -1,0 +1,81 @@
+****** build.scala  ********
+import sbt._
+import Keys._
+  
+object BuildSettings
+{
+  val buildOrganization = "edu.berkeley.cs"
+  val buildVersion = "1.1"
+  val buildScalaVersion = "2.9.2"
+
+  def apply(projectdir: String) = {
+    Defaults.defaultSettings ++ Seq (
+      organization := buildOrganization,
+      version      := buildVersion,
+      scalaVersion := buildScalaVersion,
+      scalaSource in Compile := Path.absolute(file(projectdir + "/src")),
+      resourceDirectory in Compile := Path.absolute(file(projectdir + "/src/main/resources/")),
+      resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
+      libraryDependencies += "edu.berkeley.cs" %% "chisel" % "1.0.7"
+    )
+  }
+}
+
+object ChiselBuild extends Build
+{
+  import BuildSettings._
+  lazy val work = Project("work", file("work"), settings = BuildSettings(".."))
+}
+
+# Makefile from FlexPRET
+# Michael Zimmer (mzimmer@eecs.berkeley.edu)
+
+default : all
+
+TOP=Mul
+ARGS=1
+CONFIG=$(TOP)-$(ARGS)
+
+CXX = g++
+CXXFLAGS = -g -O2
+SBT = java -Xmx1024M -Xss8M -XX:MaxPermSize=128M -jar sbt-launch.jar
+
+#------------------------------------------------------------------------------
+# Generate Verilog Source
+#------------------------------------------------------------------------------
+
+# Generate verilog from Chisel source code.
+generated-src/$(CONFIG)/$(TOP).v: ../src/*.scala
+	cd ../sbt && \
+	$(SBT) "project work" "run-main Work.WorkMain $(TOP) $(ARGS) --backend v --targetDir ../fpga/generated-src/$(CONFIG) --Wall"
+
+all: generated-src/$(CONFIG)/$(TOP).v
+
+
+Chisel notes by Michael:
+
+java -Xmx1024M -Xss8M -XX:MaxPermSize=128M -jar sbt-launch.jar "project subname[1]" "run opt[2] --backend v --targetDir generated-src --Wall
+
+in build.scala:
+scalaSource in Compile := Path.absolute(file(projectdir   "/src"[3]))
+lazy val sub = Project("subname[1]", file("subdir[4]"), settings = BuildSettings("..[5]"))
+
+in src.scala
+package Pack
+class Comp extents Component
+object Entry {
+     def main( args[2] )
+      ...
+     chiselMain ( chiselArgs[6], () => new Top()[7]): 
+
+1-project name
+2-string passed to main
+3-look in projectdir/src for scala sources (/src/main/scala is default)
+4-sources in subdirectory 'subdir'
+5-projectdir=..
+6-chiselArgs (will have to strip from end of array, ex. takeRight):
+     --targetDir [path]
+     --backed [c,v,fpga]
+     --vcd 
+     --debug
+7-creates Top.cpp, Top.h, and emulator.h

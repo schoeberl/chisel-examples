@@ -1,0 +1,22 @@
+Author: Martin Schoeberl (martin@jopdesign.com)
+
+This a try to get the minimum build environment to start with Chisel.
+
+The Chisel tutorial provides a framework with exercises and a lot
+of automation to get started with Chisel examples. However, this
+automation makes it hard to see how the individual pieces fit together.
+Therefore, this is a try to cut it down to the minimum.
+
+The example project consists of:
+
+   src/Hello.scala     The source of a hardware description of a blinking LED
+   Makefile            drives the build process
+   build.sbt           Configuration to download Chisel and for the Chisel project
+   sbt/sbt-launch.jar  is the SBT build tool for Scala
+   verilog/hello_top.v is a top level file for the FPGA
+   bemicro             contains the Altera Quartus project files for the BeMicro board
+
+The actual project configuration (files, folders, main entry,...) is
+distributed in build.sbt and as parameters to Chisel in the Makefile.
+
+Remarks and comments are distributed over the individual files.
