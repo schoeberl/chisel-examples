@@ -20,14 +20,7 @@ test:
 	scala hello.HelloMain
 
 
-
-
-
-
-
-
-
-args-not-yet-working:
+args:
 	scala hello.HelloMain —-targetDir generated —-backend v
 
 # sourcepath look like broken in scalac
