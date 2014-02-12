@@ -7,7 +7,7 @@
 SBT = java -Xmx1024M -Xss8M -XX:MaxPermSize=128M -jar sbt/sbt-launch.jar
 
 # This generates the Verilog and C++ files by invoking main from
-# class HelloMain in package example.
+# class HelloMain in package hello.
 # The source directory is configured in build.sbt.
 # The Scala/Java build directory is default ./target.
 
@@ -16,15 +16,10 @@ SBT = java -Xmx1024M -Xss8M -XX:MaxPermSize=128M -jar sbt/sbt-launch.jar
 
 
 
-# Generare Verilog code
+# Generate Verilog code
 hdl:
 	$(SBT) "run-main hello.HelloMain --targetDir generated --backend v"
 
 # C++ genertion
 cpp:
 	$(SBT) "run-main hello.HelloMain --backend c --compile --targetDir generated"
-
-###### Minimum Makefile ends here ########
-
-intsbt:
-	$(SBT)

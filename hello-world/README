@@ -14,6 +14,7 @@ The example project consists of:
    build.sbt           Configuration to download Chisel and for the Chisel project
    sbt/sbt-launch.jar  is the SBT build tool for Scala
    verilog/hello_top.v is a top level file for the FPGA
+   quartus/altde0      contains the Altera Quartus project files for the DE0 board
    quartus/bemicro     contains the Altera Quartus project files for the BeMicro board
 
 The actual project configuration (files, folders, main entry,...) is
