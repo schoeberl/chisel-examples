@@ -10,16 +10,33 @@
 import Chisel._
 import Node._
 
-
 /**
- * This shall become our ALU example
+ * This is a very basic ALU example
  */
 class Alu extends Module {
   val io = new Bundle {
     val sw = UInt(INPUT, 10)
     val led = UInt(OUTPUT, 10)
   }
-  io.led := io.sw
+
+  val fn = io.sw(1, 0)
+  val a = io.sw(5, 2)
+  val b = io.sw(9, 6)
+
+  val result = UInt(width = 4)
+  // some default value is needed
+  result := UInt(0)
+  
+  // The ALU selection
+  switch(fn) {
+    is(UInt(0)) { result := a + b }
+    is(UInt(1)) { result := a - b }
+    is(UInt(2)) { result := a | b }
+    is(UInt(3)) { result := a & b }
+  }
+
+  // Output on the LEDs (with zero extension)
+  io.led := result
 }
 
 // Generate the Verilog code by invoking chiselMain() in our main()
