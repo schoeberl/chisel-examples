@@ -13,10 +13,10 @@ Getting the Examples
 
 The collection is organized as follows:
 
-hello-world is a fully self contained minimal project for a blinking LED in an FPGA
+**hello-world** is a fully self contained minimal project for a blinking LED in an FPGA.
 
-examples is a collection of small Chisel projects
+**examples** is a collection of small Chisel projects.
 
-from-source are experiments to compile relative to the Chisel source
+**from-source** are experiments to compile relative to the Chisel source.
 
 

@@ -1,26 +1,24 @@
 /*
- * This code is a minimal hardware described in Chisel.
- * 
- * Copyright: 2013, Technical University of Denmark, DTU Compute
+ * Copyright: 2014, Technical University of Denmark, DTU Compute
  * Author: Martin Schoeberl (martin@jopdesign.com)
  * License: Simplified BSD License
  * 
- * Blinking LED: the FPGA version of Hello World
+ * An ALU is a minimal start for a processor.
+ * 
  */
 
-package hello
+// shall we have the examples in packages?
+// package hello
+
 
 import Chisel._
 import Node._
 
-/**
- * The blinking LED component.
- * 
- * The BeMicro has a 16 MHz clock.
- * The DE0 has a 50 MHz clock.
- */
 
-class Hello extends Module {
+/**
+ * This shall become our ALU example
+ */
+class Alu extends Module {
   val io = new Bundle {
     val led = UInt(OUTPUT, 1)
   }
@@ -37,8 +35,8 @@ class Hello extends Module {
 }
 
 // Generate the Verilog code by invoking chiselMain() in our main()
-object HelloMain {
+object AluMain {
   def main(args: Array[String]): Unit = {
-    chiselMain(args, () => Module(new Hello()))
+    chiselMain(args, () => Module(new Alu()))
   }
 }

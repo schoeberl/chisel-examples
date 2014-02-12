@@ -1,0 +1,12 @@
+
+Author: Martin Schoeberl (martin@jopdesign.com)
+
+This is a collection of small Chisel example circuits.
+
+
+HOWTO:
+
+1.) make
+2.) Open the project file in Quartus
+2.a.) Compile with the play button
+2.b.) Configure the FPGA with the programmer
