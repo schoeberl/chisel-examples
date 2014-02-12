@@ -7,10 +7,6 @@
  * 
  */
 
-// shall we have the examples in packages?
-// package hello
-
-
 import Chisel._
 import Node._
 
@@ -20,23 +16,16 @@ import Node._
  */
 class Alu extends Module {
   val io = new Bundle {
-    val led = UInt(OUTPUT, 1)
+    val sw = UInt(INPUT, 10)
+    val led = UInt(OUTPUT, 10)
   }
-  val CNT_MAX = UInt(16000000 / 2 - 1);
-  val r1 = Reg(init = UInt(0, 25))
-  val blk = Reg(init = UInt(0, 1))
-
-  r1 := r1 + UInt(1)
-  when(r1 === CNT_MAX) {
-    r1 := UInt(0)
-    blk := ~blk
-  }
-  io.led := blk
+  io.led := io.sw
 }
 
 // Generate the Verilog code by invoking chiselMain() in our main()
 object AluMain {
   def main(args: Array[String]): Unit = {
+    println("Hello")
     chiselMain(args, () => Module(new Alu()))
   }
 }
