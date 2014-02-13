@@ -9,6 +9,7 @@
 
 import Chisel._
 import Node._
+import scala.collection.mutable.HashMap
 
 /**
  * This is a very basic ALU example
@@ -44,5 +45,40 @@ object AluMain {
   def main(args: Array[String]): Unit = {
     println("Hello")
     chiselMain(args, () => Module(new Alu()))
+  }
+}
+
+class AluTester(dut: Alu) extends Tester(dut, Array(dut.io)) {
+  defTests {
+    var allGood = true
+    val vars = new HashMap[Node, Node]()
+
+//    vars(dut.io.sw) = UInt("b0001001000")
+//    vars(dut.io.led) = UInt("b0000000011")
+    
+    allGood = step(vars) & allGood
+
+//    for (i <- 0 until 25) {
+//      vars.clear
+////      vars(dut.io.fromMaster.M.Cmd) = testVec(i)
+//
+////      vars(dut.io.slave.S.CmdAccept) = Bits(1)
+////      vars(dut.io.slave.S.DataAccept) = Bits(1)
+//      step(vars, ovars)
+////      println("out data: " + ovars(dut.io.slave))
+//      //      println("iter: "+i)
+//      //      println("vars: "+vars)
+//      //      println("ovars: "+ovars)
+//    }
+    allGood
+  }
+}
+
+object AluTester {
+  def main(args: Array[String]): Unit = {
+    chiselMainTest(args, () => Module(new Alu)) {
+      f => new AluTester(f)
+    }
+
   }
 }
