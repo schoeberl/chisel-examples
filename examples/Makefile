@@ -19,16 +19,16 @@ SBT = java -Xmx1024M -Xss8M -XX:MaxPermSize=128M -jar ../hello-world/sbt/sbt-lau
 
 
 
+HW_ARGS = --targetDir generated --backend v
+TEST_ARGS = --genHarness --test --backend c --compile --targetDir generated
+
 # Generate Verilog code
 alu:
-	$(SBT) "run-main AluMain --targetDir generated --backend v"
+	$(SBT) "run-main AluMain $(HW_ARGS)"
 
+# Generate the C++ simulation and test it
 test-alu:
-	$(SBT) "run-main AluTester --genHarness --backend c --compile --targetDir generated"
-
-# C++ genertion
-cpp:
-	$(SBT) "run-main AluMain --backend c --compile --targetDir generated"
+	$(SBT) "run-main AluTester $(TEST_ARGS)"
 
 # Just run a sbt shell
 sbt:

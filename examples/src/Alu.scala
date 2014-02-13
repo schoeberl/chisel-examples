@@ -12,7 +12,10 @@ import Node._
 import scala.collection.mutable.HashMap
 
 /**
- * This is a very basic ALU example
+ * This is a very basic ALU example.
+ * 
+ * This should be an ALU and not have switches
+ * as inputs and leds as output.
  */
 class Alu extends Module {
   val io = new Bundle {
@@ -27,7 +30,7 @@ class Alu extends Module {
   val result = UInt(width = 4)
   // some default value is needed
   result := UInt(0)
-  
+
   // The ALU selection
   switch(fn) {
     is(UInt(0)) { result := a + b }
@@ -48,28 +51,33 @@ object AluMain {
   }
 }
 
+
+
+// Test the ALU design
 class AluTester(dut: Alu) extends Tester(dut, Array(dut.io)) {
   defTests {
     var allGood = true
     val vars = new HashMap[Node, Node]()
 
-//    vars(dut.io.sw) = UInt("b0001001000")
-//    vars(dut.io.led) = UInt("b0000000011")
-    
-    allGood = step(vars) & allGood
+    // This is exhaustive testing, which usually is not possible
+    for (a <- 0 to 15) {
+      for (b <- 0 to 15) {
+        for (op <- 0 to 3) {
+          vars(dut.io.sw) = Cat(UInt(b, 4), UInt(a, 4), UInt(op, 2))
+          val result =
+            op match {
+              case 0 => a + b
+              case 1 => a - b
+              case 2 => a | b
+              case 3 => a & b
+            }
+          val res = UInt((result & 0x0f), 4)
+          vars(dut.io.led) = res
 
-//    for (i <- 0 until 25) {
-//      vars.clear
-////      vars(dut.io.fromMaster.M.Cmd) = testVec(i)
-//
-////      vars(dut.io.slave.S.CmdAccept) = Bits(1)
-////      vars(dut.io.slave.S.DataAccept) = Bits(1)
-//      step(vars, ovars)
-////      println("out data: " + ovars(dut.io.slave))
-//      //      println("iter: "+i)
-//      //      println("vars: "+vars)
-//      //      println("ovars: "+ovars)
-//    }
+          allGood = step(vars) & allGood
+        }
+      }
+    }
     allGood
   }
 }
@@ -79,6 +87,5 @@ object AluTester {
     chiselMainTest(args, () => Module(new Alu)) {
       f => new AluTester(f)
     }
-
   }
 }
