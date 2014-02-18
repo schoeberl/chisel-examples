@@ -6,8 +6,8 @@ Author: Martin Schoeberl (martin@jopdesign.com)
 HOWTO:
 
 make alu
-	Generates the Verilog files for the small ALU
-	Synthesize it for the DE0 board with Quartus and the alu project file
+	Generates the Verilog files for the small ALU.
+	Synthesize it for the DE0 board with Quartus and the alu project file.
 
 make test-alu
-	Generats the C++ based simulation and runs the tests
+	Generats the C++ based simulation and runs the tests.
