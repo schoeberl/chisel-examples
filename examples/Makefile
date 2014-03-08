@@ -26,6 +26,9 @@ TEST_ARGS = --genHarness --test --backend c --compile --targetDir generated
 alu:
 	$(SBT) "run-main AluMain $(HW_ARGS)"
 
+uart:
+	$(SBT) "run-main UartMain $(HW_ARGS)"
+
 # Generate the C++ simulation and test it
 test-alu:
 	$(SBT) "run-main AluTester $(TEST_ARGS)"

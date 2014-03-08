@@ -1,0 +1,69 @@
+# -------------------------------------------------------------------------- #
+#
+# Copyright (C) 1991-2010 Altera Corporation
+# Your use of Altera Corporation's design tools, logic functions 
+# and other software and tools, and its AMPP partner logic 
+# functions, and any output files from any of the foregoing 
+# (including device programming or simulation files), and any 
+# associated documentation or information are expressly subject 
+# to the terms and conditions of the Altera Program License 
+# Subscription Agreement, Altera MegaCore Function License 
+# Agreement, or other applicable license agreement, including, 
+# without limitation, that your use is for the sole purpose of 
+# programming logic devices manufactured by Altera and sold by 
+# Altera or its authorized distributors.  Please refer to the 
+# applicable agreement for further details.
+#
+# -------------------------------------------------------------------------- #
+#
+
+set_global_assignment -name FAMILY "Cyclone II"
+set_global_assignment -name DEVICE EP2C20F484C7
+set_global_assignment -name TOP_LEVEL_ENTITY uart_top
+
+set_global_assignment -name LAST_QUARTUS_VERSION 10.1
+set_global_assignment -name VERILOG_FILE ../../generated/Uart.v
+set_global_assignment -name VHDL_FILE ../../vhdl/uart_top.vhdl
+
+set_global_assignment -name USE_CONFIGURATION_DEVICE OFF
+set_global_assignment -name CRC_ERROR_OPEN_DRAIN OFF
+set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "3.3-V LVCMOS"
+set_global_assignment -name RESERVE_ALL_UNUSED_PINS "AS INPUT TRI-STATED WITH WEAK PULL-UP"
+
+set_location_assignment PIN_L1 -to clk
+
+set_location_assignment PIN_L22 -to io_sw[0]
+set_location_assignment PIN_L21 -to io_sw[1]
+set_location_assignment PIN_M22 -to io_sw[2]
+set_location_assignment PIN_V12 -to io_sw[3]
+set_location_assignment PIN_W12 -to io_sw[4]
+set_location_assignment PIN_U12 -to io_sw[5]
+set_location_assignment PIN_U11 -to io_sw[6]
+set_location_assignment PIN_M2 -to io_sw[7]
+set_location_assignment PIN_M1 -to io_sw[8]
+set_location_assignment PIN_L2 -to io_sw[9]
+
+set_location_assignment PIN_R20 -to io_led[0]
+set_location_assignment PIN_R19 -to io_led[1]
+set_location_assignment PIN_U19 -to io_led[2]
+set_location_assignment PIN_Y19 -to io_led[3]
+set_location_assignment PIN_T18 -to io_led[4]
+set_location_assignment PIN_V19 -to io_led[5]
+set_location_assignment PIN_Y18 -to io_led[6]
+set_location_assignment PIN_U18 -to io_led[7]
+set_location_assignment PIN_R18 -to io_led[8]
+set_location_assignment PIN_R17 -to io_led[9]
+
+set_location_assignment PIN_R22 -to io_btn[0]
+set_location_assignment PIN_R21 -to io_btn[1]
+set_location_assignment PIN_T22 -to io_btn[2]
+set_location_assignment PIN_T21 -to reset
+
+set_location_assignment PIN_F14 -to rxd
+set_location_assignment PIN_G12 -to txd
+
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
