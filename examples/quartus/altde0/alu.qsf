@@ -41,6 +41,7 @@ set_global_assignment -name DEVICE EP3C16F484C8
 set_global_assignment -name TOP_LEVEL_ENTITY Alu
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 10.1
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "18:12:49  FEBRUARY 03, 2014"
+set_global_assignment -name VERILOG_MACRO "SYNTHESIS=<None>"
 set_global_assignment -name LAST_QUARTUS_VERSION 10.1
 set_global_assignment -name VERILOG_FILE ../../generated/Alu.v
 set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0

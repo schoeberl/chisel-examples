@@ -42,6 +42,7 @@ set_global_assignment -name TOP_LEVEL_ENTITY hello_top
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 10.1
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "04:09:25  JANUARY 04, 2013"
 set_global_assignment -name LAST_QUARTUS_VERSION 10.1
+set_global_assignment -name VERILOG_MACRO "SYNTHESIS=<None>"
 set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 1

@@ -25,6 +25,8 @@ set_global_assignment -name LAST_QUARTUS_VERSION 10.1
 set_global_assignment -name VERILOG_FILE ../../generated/Uart.v
 set_global_assignment -name VHDL_FILE ../../vhdl/uart_top.vhdl
 
+set_global_assignment -name VERILOG_MACRO "SYNTHESIS=<None>"
+
 set_global_assignment -name USE_CONFIGURATION_DEVICE OFF
 set_global_assignment -name CRC_ERROR_OPEN_DRAIN OFF
 set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "3.3-V LVCMOS"
