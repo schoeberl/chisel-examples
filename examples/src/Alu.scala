@@ -13,7 +13,7 @@ import scala.collection.mutable.HashMap
 
 /**
  * This is a very basic ALU example.
- * 
+ *
  * This should be an ALU and not have switches
  * as inputs and leds as output.
  */
@@ -51,40 +51,33 @@ object AluMain {
   }
 }
 
-
-
 // Test the ALU design
-class AluTester(dut: Alu) extends Tester(dut, Array(dut.io)) {
-  defTests {
-    var allGood = true
-    val vars = new HashMap[Node, Node]()
+class AluTester(dut: Alu) extends Tester(dut) {
 
-    // This is exhaustive testing, which usually is not possible
-    for (a <- 0 to 15) {
-      for (b <- 0 to 15) {
-        for (op <- 0 to 3) {
-          vars(dut.io.sw) = Cat(UInt(b, 4), UInt(a, 4), UInt(op, 2))
-          val result =
-            op match {
-              case 0 => a + b
-              case 1 => a - b
-              case 2 => a | b
-              case 3 => a & b
-            }
-          val res = UInt((result & 0x0f), 4)
-          vars(dut.io.led) = res
+  // This is exhaustive testing, which usually is not possible
+  for (a <- 0 to 15) {
+    for (b <- 0 to 15) {
+      for (op <- 0 to 3) {
+        val result =
+          op match {
+            case 0 => a + b
+            case 1 => a - b
+            case 2 => a | b
+            case 3 => a & b
+          }
+        val res = UInt((result & 0x0f), 4)
 
-          allGood = step(vars) & allGood
-        }
+        poke(dut.io.sw, (b << 6) + (a << 2) + op)
+        step(1) // is a step for truly combinational circuit needed?
+        expect(dut.io.led, res.litValue())
       }
     }
-    allGood
   }
 }
 
 object AluTester {
   def main(args: Array[String]): Unit = {
-    chiselMainTest(args, () => Module(new Alu)) {
+    chiselMainTest(args, () => Module(new Alu())) {
       f => new AluTester(f)
     }
   }
