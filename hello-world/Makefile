@@ -4,7 +4,10 @@
 # sbt looks for default into a folder ./project and . for build.sdt and Build.scala
 # sbt creates per default a ./target folder
 
-SBT = java -Xmx1024M -Xss8M -XX:MaxPermSize=128M -jar sbt/sbt-launch.jar
+# Using sbt with a .jar file in the repository. Better install sbt
+# SBT = java -Xmx1024M -Xss8M -XX:MaxPermSize=128M -jar sbt/sbt-launch.jar
+
+SBT = sbt
 
 # This generates the Verilog and C++ files by invoking main from
 # class HelloMain in package hello.
@@ -15,11 +18,10 @@ SBT = java -Xmx1024M -Xss8M -XX:MaxPermSize=128M -jar sbt/sbt-launch.jar
 # forwarded to the Scala/Chisel main().
 
 
-
 # Generate Verilog code
 hdl:
 	$(SBT) "run-main hello.HelloMain --targetDir generated --backend v"
 
-# C++ genertion
+# Generate C++ code (simulation)
 cpp:
 	$(SBT) "run-main hello.HelloMain --backend c --compile --targetDir generated"

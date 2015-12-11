@@ -20,3 +20,8 @@ The collection is organized as follows:
 **from-source** are experiments to compile relative to the Chisel source.
 
 
+Needed Tools
+============
+
+A recent version of Java
+The Scala build tool [sbt](http://www.scala-sbt.org/)
