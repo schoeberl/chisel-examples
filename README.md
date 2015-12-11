@@ -24,4 +24,5 @@ Needed Tools
 ============
 
 A recent version of Java
+
 The Scala build tool [sbt](http://www.scala-sbt.org/)
