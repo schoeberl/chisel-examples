@@ -19,10 +19,10 @@
 
 set_global_assignment -name FAMILY "Cyclone II"
 set_global_assignment -name DEVICE EP2C20F484C7
-set_global_assignment -name TOP_LEVEL_ENTITY Alu
+set_global_assignment -name TOP_LEVEL_ENTITY AluTop
 
 set_global_assignment -name LAST_QUARTUS_VERSION "13.0 SP1"
-set_global_assignment -name VERILOG_FILE ../../generated/Alu.v
+set_global_assignment -name VERILOG_FILE ../../generated/AluTop.v
 
 set_global_assignment -name VERILOG_MACRO "SYNTHESIS=<None>"
 
