@@ -30,6 +30,9 @@ uart:
 test-alu:
 	$(SBT) "run-main AluTester $(TEST_ARGS)"
 
+test-fifo:
+	$(SBT) "run-main FifoTester $(TEST_ARGS)"
+
 # Just run a sbt shell
 sbt:
 	$(SBT)
