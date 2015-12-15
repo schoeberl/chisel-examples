@@ -25,14 +25,22 @@ TEST_ARGS = --genHarness --test --backend c --compile --targetDir generated
 alu:
 	$(SBT) "run-main AluMain $(HW_ARGS)"
 
+knight:
+	$(SBT) "run-main simple.KnightMain $(HW_ARGS)"
+
 uart:
 	$(SBT) "run-main UartMain $(HW_ARGS)"
 
 # Generate the C++ simulation and test it
-test-alu:
+alu-test:
 	$(SBT) "run-main AluTester $(TEST_ARGS)"
 
-test-fifo:
+# TODO: decide on a naming convention related to testing
+
+knight-test:
+	$(SBT) "run-main simple.KnightTest $(TEST_ARGS)"
+
+fifo-test:
 	$(SBT) "run-main FifoTester $(TEST_ARGS)"
 
 counter:
