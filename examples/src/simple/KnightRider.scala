@@ -25,7 +25,7 @@ class KnightRider(frequ: Int) extends Module {
   val goLeft :: goRight :: Nil = Enum(UInt(), 2)
 
   val stateReg = Reg(init = goLeft)
-  val ledReg = Reg(init = Bits(1, 8))
+  val ledReg = Reg(init = Bits(1, 6))
 
   val tick = Module(new Tick(frequ))
 
