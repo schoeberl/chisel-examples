@@ -14,7 +14,9 @@ SBT = sbt
 # The first two arguments are consumed by sbt, the rest is
 # forwarded to the Scala/Chisel main().
 
-
+# Maybe change at some point to have the main class as a define
+# that can be overwriteen, such as:
+#MAIN=example.AluMain
 
 HW_ARGS = --targetDir generated --backend v
 TEST_ARGS = --genHarness --test --backend c --compile --targetDir generated
@@ -33,6 +35,5 @@ test-alu:
 test-fifo:
 	$(SBT) "run-main FifoTester $(TEST_ARGS)"
 
-# Just run a sbt shell
-sbt:
-	$(SBT)
+counter:
+	$(SBT) "run-main simple.CounterMain $(TEST_ARGS)"
