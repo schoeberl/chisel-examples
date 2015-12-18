@@ -22,6 +22,8 @@ class BubbleFifo(size: Int) extends Module {
     val ready = Bool(OUTPUT)
     val full = Bool(OUTPUT)
     val dout = UInt(OUTPUT, size)
+    // just for debugging
+    val stateReg = Bool(OUTPUT)
   }
 
   val empty :: full :: Nil = Enum(UInt(), 2)
@@ -45,6 +47,8 @@ class BubbleFifo(size: Int) extends Module {
   io.ready := (stateReg === empty)
   io.full := (stateReg === full)
   io.dout := dataReg
+  
+  io.stateReg := stateReg
 }
 
 
@@ -53,19 +57,35 @@ class BubbleFifo(size: Int) extends Module {
  */
 class FifoTester(dut: BubbleFifo) extends Tester(dut) {
 
-  // the following feels simply odd in a OO language
-  // shouldn't it be Bool(false)?
+  // some defaults for all signals
   poke(dut.io.write, 0)
+  poke(dut.io.din, 0xab)
+  poke(dut.io.read, 0)
   step(1)
   peek(dut.io.ready)
-  poke(dut.io.din, 123)
+  
+  // write into the buffer
+  poke(dut.io.din, 0x12)
   poke(dut.io.write, 1)
   step(1)
   peek(dut.io.ready)
+  
+  poke(dut.io.din, 0x34)
   poke(dut.io.write, 0)
   step(1)
   peek(dut.io.ready)
   
+  // read out
+  poke(dut.io.read, 1)
+  step(1)
+  poke(dut.io.read, 0)
+  step(1)
+  
+  // write next
+  poke(dut.io.din, 0x56)
+  poke(dut.io.write, 1)
+  step(1)
+  peek(dut.io.ready)
 }
 
 object FifoTester {

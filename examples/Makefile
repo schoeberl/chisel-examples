@@ -47,5 +47,7 @@ fifo-test:
 fifo-view:
 	gtkwave generated/BubbleFifo.vcd --save=bubble.gtkw
 
+fifo: fifo-test fifo-view
+
 counter:
 	$(SBT) "run-main simple.CounterMain $(TEST_ARGS)"
