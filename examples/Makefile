@@ -20,6 +20,7 @@ SBT = sbt
 
 HW_ARGS = --targetDir generated --backend v
 TEST_ARGS = --genHarness --test --backend c --compile --targetDir generated
+TEST_ARGS_VCD = --genHarness --test --backend c --compile --vcd --targetDir generated
 
 # Generate Verilog code
 alu:
@@ -41,7 +42,7 @@ knight-test:
 	$(SBT) "run-main simple.KnightTest $(TEST_ARGS)"
 
 fifo-test:
-	$(SBT) "run-main FifoTester $(TEST_ARGS)"
+	$(SBT) "run-main FifoTester $(TEST_ARGS_VCD)"
 
 counter:
 	$(SBT) "run-main simple.CounterMain $(TEST_ARGS)"

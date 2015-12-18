@@ -14,15 +14,37 @@ import scala.collection.mutable.HashMap
 /**
  * This is ?.
  */
-class BubbleFifo extends Module {
+class BubbleFifo(size: Int) extends Module {
   val io = new Bundle {
+    val din = UInt(INPUT, size)
     val write = Bool(INPUT)
     val read = Bool(INPUT)
     val ready = Bool(OUTPUT)
-    // data is needed
+    val full = Bool(OUTPUT)
+    val dout = UInt(OUTPUT, size)
   }
 
-  io.ready := io.write
+  val empty :: full :: Nil = Enum(UInt(), 2)
+  val stateReg = Reg(init = empty)
+  // TODO: maybe just specify the size and not a reset value
+  val dataReg = Reg(init = Bits(0, size))
+  
+  when (stateReg === empty) {
+    when (io.write) {
+      stateReg := full
+      dataReg := io.din
+    }
+  } . elsewhen(stateReg === full) {
+    when (io.read) {
+      stateReg := empty
+    }
+  } .otherwise {
+    // There should not be an otherwise state
+  }
+
+  io.ready := (stateReg === empty)
+  io.full := (stateReg === full)
+  io.dout := dataReg
 }
 
 
@@ -36,6 +58,7 @@ class FifoTester(dut: BubbleFifo) extends Tester(dut) {
   poke(dut.io.write, 0)
   step(1)
   peek(dut.io.ready)
+  poke(dut.io.din, 123)
   poke(dut.io.write, 1)
   step(1)
   peek(dut.io.ready)
@@ -47,8 +70,7 @@ class FifoTester(dut: BubbleFifo) extends Tester(dut) {
 
 object FifoTester {
   def main(args: Array[String]): Unit = {
-    println("Testing the ALU")
-    chiselMainTest(args, () => Module(new BubbleFifo())) {
+    chiselMainTest(args, () => Module(new BubbleFifo(8))) {
       f => new FifoTester(f)
     }
   }
