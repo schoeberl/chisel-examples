@@ -44,5 +44,8 @@ knight-test:
 fifo-test:
 	$(SBT) "run-main FifoTester $(TEST_ARGS_VCD)"
 
+fifo-view:
+	gtkwave generated/BubbleFifo.vcd
+
 counter:
 	$(SBT) "run-main simple.CounterMain $(TEST_ARGS)"
