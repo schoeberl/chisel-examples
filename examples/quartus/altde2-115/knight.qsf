@@ -27,7 +27,7 @@
 set_global_assignment -name FAMILY "Cyclone IV E"
 set_global_assignment -name DEVICE EP4CE115F29C7
 
-set_global_assignment -name TOP_LEVEL_ENTITY knight_top
+set_global_assignment -name TOP_LEVEL_ENTITY KnightTop
 set_global_assignment -name VERILOG_MACRO "SYNTHESIS=<None>"
 
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
@@ -82,11 +82,19 @@ set_instance_assignment -name IO_STANDARD "2.5 V" -to io_sw[7]
 set_instance_assignment -name IO_STANDARD "2.5 V" -to io_sw[8]
 set_instance_assignment -name IO_STANDARD "2.5 V" -to io_sw[9]
 
+set_location_assignment PIN_M23 -to io_btn[0]
+set_location_assignment PIN_M21 -to io_btn[1]
+set_location_assignment PIN_N21 -to io_btn[2]
+set_location_assignment PIN_R24 -to io_btn[3]
+set_instance_assignment -name IO_STANDARD "2.5 V" -to io_btn[0]
+set_instance_assignment -name IO_STANDARD "2.5 V" -to io_btn[1]
+set_instance_assignment -name IO_STANDARD "2.5 V" -to io_btn[2]
+set_instance_assignment -name IO_STANDARD "2.5 V" -to io_btn[3]
+
 set_global_assignment -name LAST_QUARTUS_VERSION 14.1.0
 set_global_assignment -name RESERVE_ALL_UNUSED_PINS "AS INPUT TRI-STATED WITH WEAK PULL-UP"
 
-set_global_assignment -name VHDL_FILE ../../vhdl/knight_top.vhdl
-set_global_assignment -name VERILOG_FILE ../../generated/KnightRider.v
+set_global_assignment -name VERILOG_FILE ../../generated/KnightTop.v
 set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"

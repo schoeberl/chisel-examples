@@ -17,7 +17,8 @@ import Chisel._
 /**
  * Do some fancy blinking.
  */
-class KnightRider(frequ: Int) extends Module {
+class KnightRider(resetSignal: Bool = null, frequ: Int)
+    extends Module(_reset = resetSignal) {
   val io = new Bundle {
     val led = Bits(OUTPUT, 6)
   }
@@ -56,7 +57,7 @@ class Tick(frequ: Int) extends Module {
   val io = new Bundle {
     val tick = Bits(OUTPUT, 1)
   }
-  val CNT_MAX = UInt(frequ/6 - 1)
+  val CNT_MAX = UInt(frequ / 6 - 1)
 
   val r1 = Reg(init = UInt(0, 32))
 
@@ -84,15 +85,31 @@ class KnightTester(dut: KnightRider) extends Tester(dut) {
  */
 object KnightTest {
   def main(args: Array[String]): Unit = {
-    chiselMainTest(args, () => Module(new KnightRider(12))) {
+    chiselMainTest(args, () => Module(new KnightRider(Bool(false),12))) {
       c => new KnightTester(c)
     }
   }
 }
 
+/**
+ * Top level to connect the button to the reset.
+ */
+class KnightTop extends Module {
+  val io = new Bundle {
+    val btn = UInt(INPUT, 4)
+    val led = Bits(OUTPUT, 6)
+  }
+
+  // don't use the name reset for a variable as this is a method in Module
+  val resetVal = io.btn(3) =/= UInt(1) // that is ugly, but don't know better now
+  val knight = Module(new KnightRider(resetVal, 50000000))
+
+  io.led <> knight.io.led
+}
+
 object KnightMain {
   def main(args: Array[String]): Unit = {
     // DE2-115 has a 50 MHz clock
-    chiselMain(args, () => Module(new KnightRider(50000000)))
+    chiselMain(args, () => Module(new KnightTop()))
   }
 }
