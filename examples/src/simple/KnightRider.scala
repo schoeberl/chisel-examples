@@ -72,6 +72,33 @@ class Tick(frequ: Int) extends Module {
   io.tick := tick
 }
 
+/**
+ * This is a reset "generator". However, this works ONLY
+ * in a FPGA when registers are reset to 0 on FPGA configuration.
+ * 
+ * However, as we do not have a chance to specify register power up
+ * attributes, this is a fragile solution (did not work for 2 or 3
+ * bit wide counters).
+ */
+class ResetGen(resetSignal: Bool = null) extends Module {
+  val io = new Bundle {
+    val resetOut = Bool(OUTPUT)
+  }
+  
+  val cnt = Reg(UInt(width = 4))
+  
+  when (cnt =/= UInt(15)) {
+    cnt := cnt + UInt(1)
+    io.resetOut := Bool(true)
+  } .otherwise {
+    cnt := cnt // this should not be needed, but without it the gen. code is wrong
+    io.resetOut := Bool(false)    
+  }
+}
+
+/**
+ * A simple tester that just runs some ticks
+ */
 class KnightTester(dut: KnightRider) extends Tester(dut) {
 
   for (i <- 0 until 30) {
@@ -100,8 +127,11 @@ class KnightTop extends Module {
     val led = Bits(OUTPUT, 6)
   }
 
+  val resGen = Module(new ResetGen(Bool(false)))
+  
   // don't use the name reset for a variable as this is a method in Module
-  val resetVal = io.btn(3) =/= UInt(1) // that is ugly, but don't know better now
+  // that is ugly, but don't know better now
+  val resetVal = io.btn(3) =/= UInt(1) || resGen.io.resetOut
   val knight = Module(new KnightRider(resetVal, 50000000))
 
   io.led <> knight.io.led
