@@ -1,4 +1,7 @@
 /*
+ * Simple FSM example including slow frequency tick generation and
+ * reset handling with a top level Chisel component.
+ * 
  * This code is part of the Chisel examples.
  * 
  * Copyright: 2015, Technical University of Denmark, DTU Compute
@@ -6,7 +9,7 @@
  * License: Simplified BSD License
  * 
  * A simple finite state machine (FSM) that drives LEDs like
- * on the Knight Rider car.
+ * on the lights on the Knight Rider car.
  * 
  */
 
@@ -74,8 +77,8 @@ class Tick(frequ: Int) extends Module {
 
 /**
  * This is a reset "generator". However, this works ONLY
- * in a FPGA when registers are reset to 0 on FPGA configuration.
- * 
+ * in an FPGA when registers are reset to 0 on FPGA configuration.
+ *
  * However, as we do not have a chance to specify register power up
  * attributes, this is a fragile solution (did not work for 2 or 3
  * bit wide counters).
@@ -84,15 +87,15 @@ class ResetGen(resetSignal: Bool = null) extends Module {
   val io = new Bundle {
     val resetOut = Bool(OUTPUT)
   }
-  
+
   val cnt = Reg(UInt(width = 4))
-  
-  when (cnt =/= UInt(15)) {
+
+  when(cnt =/= UInt(15)) {
     cnt := cnt + UInt(1)
     io.resetOut := Bool(true)
-  } .otherwise {
+  }.otherwise {
     cnt := cnt // this should not be needed, but without it the gen. code is wrong
-    io.resetOut := Bool(false)    
+    io.resetOut := Bool(false)
   }
 }
 
@@ -112,7 +115,7 @@ class KnightTester(dut: KnightRider) extends Tester(dut) {
  */
 object KnightTest {
   def main(args: Array[String]): Unit = {
-    chiselMainTest(args, () => Module(new KnightRider(Bool(false),12))) {
+    chiselMainTest(args, () => Module(new KnightRider(Bool(false), 12))) {
       c => new KnightTester(c)
     }
   }
@@ -127,11 +130,16 @@ class KnightTop extends Module {
     val led = Bits(OUTPUT, 6)
   }
 
+  // Invert the reset button and two flip-flop input synchronization
+  val manReset = (~io.btn(3)).toBool
+  val syncBtn = Reg(next = Reg(next = manReset))
+
   val resGen = Module(new ResetGen(Bool(false)))
-  
-  // don't use the name reset for a variable as this is a method in Module
-  // that is ugly, but don't know better now
-  val resetVal = io.btn(3) =/= UInt(1) || resGen.io.resetOut
+
+  // Manual or generated reset
+  val resetVal = syncBtn || resGen.io.resetOut
+
+  // DE2-115 has a 50 MHz clock
   val knight = Module(new KnightRider(resetVal, 50000000))
 
   io.led <> knight.io.led
@@ -139,7 +147,6 @@ class KnightTop extends Module {
 
 object KnightMain {
   def main(args: Array[String]): Unit = {
-    // DE2-115 has a 50 MHz clock
     chiselMain(args, () => Module(new KnightTop()))
   }
 }
