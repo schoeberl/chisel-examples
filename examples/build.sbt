@@ -7,7 +7,7 @@ scalaSource in Compile := baseDirectory.value / "src"
 // libraryDependencies += "edu.berkeley.cs" %% "chisel" % "latest.release"
 
 // use 2.2.30 till VCD issue is fixed
-libraryDependencies += "edu.berkeley.cs" %% "chisel" % "2.2.30"
+ libraryDependencies += "edu.berkeley.cs" %% "chisel" % "2.2.30"
 
 // This is from a locally published version
 // libraryDependencies += "edu.berkeley.cs" %% "chisel" % "2.3-SNAPSHOT"
