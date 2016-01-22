@@ -11,7 +11,10 @@ import Chisel._
 import Node._
 import scala.collection.mutable.HashMap
 
-class BubbleFifo(size: Int) extends Module {
+/**
+ * This is ?.
+ */
+class Fifo(size: Int) extends Module {
   val io = new Bundle {
     val din = UInt(INPUT, size)
     val write = Bool(INPUT)
@@ -52,7 +55,7 @@ class BubbleFifo(size: Int) extends Module {
 /**
  * Test the design.
  */
-class BubbleFifoTester(dut: BubbleFifo) extends Tester(dut) {
+class FifoTester(dut: Fifo) extends Tester(dut) {
 
   // some defaults for all signals
   poke(dut.io.write, 0)
@@ -85,10 +88,10 @@ class BubbleFifoTester(dut: BubbleFifo) extends Tester(dut) {
   peek(dut.io.ready)
 }
 
-object BubbleFifoTester {
+object FifoTester {
   def main(args: Array[String]): Unit = {
-    chiselMainTest(args, () => Module(new BubbleFifo(8))) {
-      f => new BubbleFifoTester(f)
+    chiselMainTest(args, () => Module(new Fifo(8))) {
+      f => new FifoTester(f)
     }
   }
 }
