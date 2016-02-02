@@ -1,10 +1,10 @@
 [*]
 [*] GTKWave Analyzer v3.3.60 (w)1999-2014 BSI
-[*] Fri Jan 22 22:10:12 2016
+[*] Tue Feb  2 20:46:30 2016
 [*]
 [dumpfile] "generated/BubbleFifo.vcd"
-[dumpfile_mtime] "Fri Jan 22 22:09:14 2016"
-[dumpfile_size] 3820
+[dumpfile_mtime] "Tue Feb  2 20:45:57 2016"
+[dumpfile_size] 3892
 [savefile] "bubble.gtkw"
 [timestart] 0
 [size] 1147 641
@@ -19,18 +19,17 @@
 BubbleFifo.clk
 @22
 BubbleFifo.io_enq_din[7:0]
+@29
+BubbleFifo.io_enq_full
 @28
 BubbleFifo.io_enq_write
 BubbleFifo.io_deq_empty
-@29
-BubbleFifo.io_enq_full
+BubbleFifo.io_deq_read
 @22
-BubbleFifo.io_deq_dout[7:0]
 BubbleFifo.FifoRegister.dataReg[7:0]
 BubbleFifo.FifoRegister_1.dataReg[7:0]
 BubbleFifo.FifoRegister_2.dataReg[7:0]
 BubbleFifo.FifoRegister_3.dataReg[7:0]
-@28
-BubbleFifo.io_deq_read
+BubbleFifo.io_deq_dout[7:0]
 [pattern_trace] 1
 [pattern_trace] 0

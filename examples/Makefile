@@ -42,7 +42,7 @@ knight-test:
 	$(SBT) "run-main simple.KnightTest $(TEST_ARGS)"
 
 fifo-test:
-	$(SBT) "run-main FifoTester $(TEST_ARGS_VCD)"
+	$(SBT) "run-main simple.FifoTester $(TEST_ARGS_VCD)"
 
 fifo-view:
 	gtkwave generated/BubbleFifo.vcd --save=bubble.gtkw

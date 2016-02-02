@@ -7,6 +7,8 @@
  * 
  */
 
+package simple
+
 import Chisel._
 import Node._
 import scala.collection.mutable.HashMap
@@ -37,6 +39,9 @@ class ReaderIO(size: Int) extends Bundle {
   val dout = UInt(OUTPUT, size)
 }
 
+/**
+ * A single register (=stage) to build the FIFO.
+ */
 class FifoRegister(size: Int) extends Module {
   val io = new Bundle {
     val enq = new WriterIO(size)
@@ -66,8 +71,7 @@ class FifoRegister(size: Int) extends Module {
   io.deq.dout := dataReg
 }
 /**
- * This is bubble FIFO, but we change the name to keep the BubbleFifo
- * example till the Chisel VCD output is fixed.
+ * This is a bubble FIFO.
  */
 class BubbleFifo(size: Int, depth: Int) extends Module {
   val io = new Bundle {
@@ -99,34 +103,72 @@ class FifoTester(dut: BubbleFifo) extends Tester(dut) {
   poke(dut.io.enq.write, 0)
   poke(dut.io.deq.read, 0)
   step(1)
-  peek(dut.io.enq.full)
+  var full = peek(dut.io.enq.full)
+  var empty = peek(dut.io.deq.empty)
 
   // write into the buffer
   poke(dut.io.enq.din, 0x12)
   poke(dut.io.enq.write, 1)
   step(1)
-  peek(dut.io.enq.full)
+  full = peek(dut.io.enq.full)
 
-  poke(dut.io.enq.din, 0x34)
+  poke(dut.io.enq.din, 0xff)
   poke(dut.io.enq.write, 0)
   step(1)
-  peek(dut.io.enq.full)
+  full = peek(dut.io.enq.full)
 
-  // read out
+  step(3) // see the bubbling of the first element
+
+  // Fill the whole buffer with a check for full condition
+  // Only every second cycle a write can happen.
+  for (i <- 0 until 7) {
+    full = peek(dut.io.enq.full)
+    poke(dut.io.enq.din, 0x80 + i)
+    if (full == 0) {
+      poke(dut.io.enq.write, 1)
+    } else {
+      poke(dut.io.enq.write, 0)
+    }
+    step(1)
+  }
+
+  // Now we know it is full, so do a single read and watch
+  // how this empty slot bubble up to the FIFO input.
   poke(dut.io.deq.read, 1)
   step(1)
   poke(dut.io.deq.read, 0)
-  step(1)
+  step(6)
 
-  // write next
-  poke(dut.io.enq.din, 0x56)
-  poke(dut.io.enq.write, 1)
-  step(1)
-  peek(dut.io.enq.full)
-  
-  poke(dut.io.enq.write, 0)
-  for (i <- 0 until 20)
+  // New read out the whole buffer.
+  // Also watch that maximum read out is every second clock cycle
+  for (i <- 0 until 7) {
+    empty = peek(dut.io.deq.empty)
+    if (empty == 0) {
+      poke(dut.io.deq.read, 1)
+    } else {
+      poke(dut.io.deq.read, 0)
+    }
     step(1)
+  }
+
+  // Now write and read at maximum speed for some time
+  for (i <- 1 until 16) {
+    full = peek(dut.io.enq.full)
+    poke(dut.io.enq.din, i)
+    if (full == 0) {
+      poke(dut.io.enq.write, 1)
+    } else {
+      poke(dut.io.enq.write, 0)
+    }
+    empty = peek(dut.io.deq.empty)
+    if (empty == 0) {
+      poke(dut.io.deq.read, 1)
+    } else {
+      poke(dut.io.deq.read, 0)
+    }
+    step(1)
+  }
+
 }
 
 object FifoTester {
