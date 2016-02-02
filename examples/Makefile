@@ -49,10 +49,6 @@ fifo-view:
 
 fifo: fifo-test fifo-view
 
-top-test:
-	$(SBT) "run-main Top $(TEST_ARGS_VCD)"
-	gtkwave generated/Top.vcd --save=top.gtkw
-	
 
 counter:
 	$(SBT) "run-main simple.CounterMain $(TEST_ARGS)"
