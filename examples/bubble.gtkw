@@ -2,7 +2,7 @@
 [*] GTKWave Analyzer v3.3.60 (w)1999-2014 BSI
 [*] Fri Jan 22 22:10:12 2016
 [*]
-[dumpfile] "generated/Fifo.vcd"
+[dumpfile] "generated/BubbleFifo.vcd"
 [dumpfile_mtime] "Fri Jan 22 22:09:14 2016"
 [dumpfile_size] 3820
 [savefile] "bubble.gtkw"
@@ -10,27 +10,27 @@
 [size] 1147 641
 [pos] -1 -1
 *-2.432238 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
-[treeopen] Fifo.
+[treeopen] BubbleFifo.
 [sst_width] 203
 [signals_width] 158
 [sst_expanded] 1
 [sst_vpaned_height] 172
 @28
-Fifo.clk
+BubbleFifo.clk
 @22
-Fifo.io_enq_din[7:0]
+BubbleFifo.io_enq_din[7:0]
 @28
-Fifo.io_enq_write
-Fifo.io_deq_empty
+BubbleFifo.io_enq_write
+BubbleFifo.io_deq_empty
 @29
-Fifo.io_enq_full
+BubbleFifo.io_enq_full
 @22
-Fifo.io_deq_dout[7:0]
-Fifo.FifoRegister.dataReg[7:0]
-Fifo.FifoRegister_1.dataReg[7:0]
-Fifo.FifoRegister_2.dataReg[7:0]
-Fifo.FifoRegister_3.dataReg[7:0]
+BubbleFifo.io_deq_dout[7:0]
+BubbleFifo.FifoRegister.dataReg[7:0]
+BubbleFifo.FifoRegister_1.dataReg[7:0]
+BubbleFifo.FifoRegister_2.dataReg[7:0]
+BubbleFifo.FifoRegister_3.dataReg[7:0]
 @28
-Fifo.io_deq_read
+BubbleFifo.io_deq_read
 [pattern_trace] 1
 [pattern_trace] 0

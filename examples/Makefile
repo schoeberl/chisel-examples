@@ -45,7 +45,7 @@ fifo-test:
 	$(SBT) "run-main FifoTester $(TEST_ARGS_VCD)"
 
 fifo-view:
-	gtkwave generated/Fifo.vcd --save=bubble.gtkw
+	gtkwave generated/BubbleFifo.vcd --save=bubble.gtkw
 
 fifo: fifo-test fifo-view
 

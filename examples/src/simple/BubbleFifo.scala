@@ -69,7 +69,7 @@ class FifoRegister(size: Int) extends Module {
  * This is bubble FIFO, but we change the name to keep the BubbleFifo
  * example till the Chisel VCD output is fixed.
  */
-class Fifo(size: Int, depth: Int) extends Module {
+class BubbleFifo(size: Int, depth: Int) extends Module {
   val io = new Bundle {
     val enq = new WriterIO(size)
     val deq = new ReaderIO(size)
@@ -92,7 +92,7 @@ class Fifo(size: Int, depth: Int) extends Module {
 /**
  * Test the design.
  */
-class FifoTester(dut: Fifo) extends Tester(dut) {
+class FifoTester(dut: BubbleFifo) extends Tester(dut) {
 
   // some defaults for all signals
   poke(dut.io.enq.din, 0xab)
@@ -124,13 +124,14 @@ class FifoTester(dut: Fifo) extends Tester(dut) {
   step(1)
   peek(dut.io.enq.full)
   
+  poke(dut.io.enq.write, 0)
   for (i <- 0 until 20)
     step(1)
 }
 
 object FifoTester {
   def main(args: Array[String]): Unit = {
-    chiselMainTest(args, () => Module(new Fifo(8, 4))) {
+    chiselMainTest(args, () => Module(new BubbleFifo(8, 4))) {
       f => new FifoTester(f)
     }
   }
