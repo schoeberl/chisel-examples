@@ -1,7 +1,8 @@
 
 scalaVersion := "2.11.7"
 
-scalaSource in Compile := baseDirectory.value / "src"
+// Only needed if not organized according to the sbt standard
+// scalaSource in Compile := baseDirectory.value / "src"
 
 // This is the latest release from UCB
 // libraryDependencies += "edu.berkeley.cs" %% "chisel" % "latest.release"
