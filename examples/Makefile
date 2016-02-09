@@ -50,5 +50,9 @@ fifo-view:
 fifo: fifo-test fifo-view
 
 
+
 counter:
 	$(SBT) "run-main simple.CounterMain $(TEST_ARGS)"
+
+regsize:
+	$(SBT) "run-main questions.RegSizeTester $(TEST_ARGS)"
