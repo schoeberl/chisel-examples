@@ -1,5 +1,6 @@
-set_global_assignment -name TOP_LEVEL_ENTITY AlteraJtagTop
-set_global_assignment -name VERILOG_FILE ../../generated/AlteraJtagTop.v
+set_global_assignment -name TOP_LEVEL_ENTITY AlteraJtag
+set_global_assignment -name VERILOG_FILE ../../verilog/hello_top.v
+set_global_assignment -name VERILOG_FILE ../../generated/Hello.v
 
 set_global_assignment -name FAMILY "Cyclone V"
 set_global_assignment -name DEVICE 5CEFA9F23C8
@@ -20,16 +21,14 @@ set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "3.3-V LVTTL"
 
 set_location_assignment PIN_M9 -to clk
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to clk
-set_location_assignment PIN_B17 -to io_led
-set_instance_assignment -name IO_STANDARD "1.5 V" -to io_led
+set_location_assignment PIN_B17 -to led
+set_instance_assignment -name IO_STANDARD "1.5 V" -to led
 
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 
 set_global_assignment -name CDF_FILE jtag_com.cdf
-
-
 
 
 
