@@ -1,5 +1,5 @@
-set_global_assignment -name TOP_LEVEL_ENTITY AlteraJtagTop
-set_global_assignment -name VERILOG_FILE ../../generated/AlteraJtagTop.v
+set_global_assignment -name TOP_LEVEL_ENTITY AlteraJtagEchoTop
+set_global_assignment -name VERILOG_FILE ../../generated/AlteraJtagEchoTop.v
 
 set_global_assignment -name FAMILY "Cyclone V"
 set_global_assignment -name DEVICE 5CEFA9F23C8
