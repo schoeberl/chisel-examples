@@ -14,6 +14,9 @@ import Chisel._
 import Node._
 import scala.collection.mutable.HashMap
 
+/**
+ * The Altera JTAG 'UART' with an Atalntic interface and no documentation.
+ */
 class alt_jtag_atlantic extends BlackBox {
   val io = new Bundle {
     val rst_n = UInt(INPUT, 1)
@@ -47,7 +50,8 @@ class alt_jtag_atlantic extends BlackBox {
 }
 
 /**
- * Wrap the Altera Atlantic in a nicer Chisel module.
+ * Wrap the Altera Atlantic JTAG component into a nicer Chisel module.
+ * And translate this (strange) Atlantic interface to something more AXI like.
  *
  * See: https://www.altera.com/content/dam/altera-www/global/en_US/pdfs/literature/fs/fs_atlantic.pdf
  *
@@ -60,12 +64,12 @@ class alt_jtag_atlantic extends BlackBox {
 class AlteraJtag() extends Module {
   val io = new Bundle {
     val txData = UInt(INPUT, 8) // data from FPGA to host
-    val txValid = UInt(INPUT, 1) // data valid
-    val txReady = UInt(OUTPUT, 1) // can write (next) cycle, or FIFO not full?
+    val txValid = Bool(INPUT) // data valid
+    val txReady = Bool(OUTPUT) // can write (next) cycle, or FIFO not full?
 
     val rxData = UInt(OUTPUT, 8) // data from host to FPGA
-    val rxReady = UInt(INPUT, 1) // ready to receive more data
-    val rxValid = UInt(OUTPUT, 1) // rx data valid
+    val rxReady = Bool(INPUT) // ready to receive more data
+    val rxValid = Bool(OUTPUT) // rx data valid
 
   }
 
@@ -130,12 +134,12 @@ class AlteraJtagEcho(resetSignal: Bool = null) extends Module(_reset = resetSign
   val dataReg = Reg(init = UInt(0, 8))
 
   when(!isFullReg) {
-    when(jtag.io.rxValid === UInt(1)) {
+    when(jtag.io.rxValid) {
       dataReg := jtag.io.rxData + UInt(1)
       isFullReg := Bool(true)
     }
   }.otherwise {
-    when(jtag.io.txReady === UInt(1)) {
+    when(jtag.io.txReady) {
       isFullReg := Bool(false)
     }
   }
@@ -144,25 +148,11 @@ class AlteraJtagEcho(resetSignal: Bool = null) extends Module(_reset = resetSign
   jtag.io.txValid := isFullReg
   jtag.io.txData := dataReg
 
-  // val reg = Reg(next = jtag.io.rxData)
-
   // blink on receiving a character
   val blink = Reg(init = UInt(0, 1))
-
   when(!isFullReg && jtag.io.rxValid === UInt(1)) {
     blink := ~blink;
   }
-
-//  // Do some blinking to see the FPGA running
-//  val CNT_MAX = UInt(24000000 / 2 - 1);
-//  val r1 = Reg(init = UInt(0, 25))
-//  val blk = Reg(init = UInt(0, 1))
-//
-//  r1 := r1 + UInt(1)
-//  when(r1 === CNT_MAX) {
-//    r1 := UInt(0)
-//    blk := ~blk
-//  }
   io.led := blink
 }
 
