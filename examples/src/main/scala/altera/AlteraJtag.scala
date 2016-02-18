@@ -22,8 +22,8 @@ class alt_jtag_atlantic extends BlackBox {
     val r_ena = UInt(OUTPUT, 1) // can write (next) cycle, or FIFO not full?
     val t_dat = UInt(OUTPUT, 8) // data to FPGA
     val t_dav = UInt(INPUT, 1) // ready to receive more data
-    val t_ena = UInt(OUTPUT, 8) // tx data valid
-    val t_pause = UInt(OUTPUT, 8) // ???
+    val t_ena = UInt(OUTPUT, 1) // tx data valid
+    val t_pause = UInt(OUTPUT, 1) // ???
   }
   
   setVerilogParameters(new VerilogParameters {
