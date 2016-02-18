@@ -3,9 +3,10 @@
  * Author: Martin Schoeberl (martin@jopdesign.com)
  * License: Simplified BSD License
  * 
- * Play with the Altera JTAG communication.
- * This is also a demonstration for using a black box.
+ * Use the Altera JTAG communication and translate the Atlantic
+ * interface to a ready/go interface (like AXI).
  * 
+ * This is also a demonstration for using a black box.
  */
 
 package altera
@@ -72,15 +73,15 @@ class AlteraJtag() extends Module {
     val rxValid = Bool(OUTPUT) // rx data valid
 
   }
+  val alt_jtag = Module(new alt_jtag_atlantic())
 
-  val jtag = Module(new alt_jtag_atlantic())
-
-  jtag.io.rst_n := ~reset
+  alt_jtag.io.rst_n := ~reset
 
   // Altera Atlantic interface, mapped to nicer names and some translation.
   // Inspired by Tommy and the AXI interface.
 
-  // Assuming host is master, FPGA slave.
+  // Transmitting from FPGA to host. Assuming host is master, FPGA slave.
+  // 
   // Register valid and data on behalf of the user of AlteraJtag.
   // Accept one cycle delay - not an issue here.
   //
@@ -99,7 +100,7 @@ class AlteraJtag() extends Module {
   // Latch it here.
   //
 
-  io.txReady := jtag.io.r_ena
+  io.txReady := alt_jtag.io.r_ena
 
   val validReg = Reg(init = Bool(false))
   val dataReg = Reg(init = UInt(0, 8))
@@ -110,15 +111,15 @@ class AlteraJtag() extends Module {
     dataReg := io.txData
   }.otherwise {
     // reset valid on new data request with ena
-    when(jtag.io.r_ena === UInt(1)) {
+    when(alt_jtag.io.r_ena === UInt(1)) {
       validReg := Bool(false)
     }
 
   }
-  jtag.io.r_val := validReg
-  jtag.io.r_dat := dataReg
+  alt_jtag.io.r_val := validReg
+  alt_jtag.io.r_dat := dataReg
 
-  // Host is master, FPGA slave
+  // Receiving from host. Host is master, FPGA slave
   //
   // clock             /--\__/--\__/--\__/--\__/--\__/--\__
   //
@@ -132,15 +133,17 @@ class AlteraJtag() extends Module {
   // Master start sending data (ena, data).
   // Slave indicates with dav low not having 'threshold' words space.
   //
-  jtag.io.t_dav := io.rxReady
-  io.rxValid := jtag.io.t_ena
-  io.rxData := jtag.io.t_dat
-
-  // TODO: may having tiny FSM to translate to the simpler AXI interface?
+  // Maybe rxValid should be called read
+  
+  alt_jtag.io.t_dav := io.rxReady
+  io.rxValid := alt_jtag.io.t_ena
+  io.rxData := alt_jtag.io.t_dat
 }
+
 /**
  * This is a simple echo component to test the Altera JTAG communication.
- * Echos a character incremented by 1: 'a' => 'b'
+ * Echos a character incremented by 1, i.e., 'a' => 'b'
+ * Blink the LED on a character received.
  */
 class AlteraJtagEcho(resetSignal: Bool = null) extends Module(_reset = resetSignal) {
   val io = new Bundle {
@@ -166,7 +169,7 @@ class AlteraJtagEcho(resetSignal: Bool = null) extends Module(_reset = resetSign
   jtag.io.txData := dataReg
   jtag.io.txValid := isFullReg && jtag.io.txReady
 
-  jtag.io.rxReady := !isFullReg && (jtag.io.rxValid =/= UInt(1))
+  jtag.io.rxReady := !isFullReg
 
   // blink on receiving a character
   val blink = Reg(init = UInt(0, 1))
