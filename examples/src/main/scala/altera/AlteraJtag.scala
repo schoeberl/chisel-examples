@@ -15,7 +15,7 @@ import Node._
 import scala.collection.mutable.HashMap
 
 /**
- * The Altera JTAG 'UART' with an Atalntic interface and no documentation.
+ * The Altera JTAG 'UART' with an Atlantic interface and no documentation.
  */
 class alt_jtag_atlantic extends BlackBox {
   val io = new Bundle {
@@ -63,9 +63,9 @@ class alt_jtag_atlantic extends BlackBox {
 
 class AlteraJtag() extends Module {
   val io = new Bundle {
+    val txReady = Bool(OUTPUT) // can write (next) cycle
+    val txValid = Bool(INPUT)  // data valid = single cycle write
     val txData = UInt(INPUT, 8) // data from FPGA to host
-    val txValid = Bool(INPUT) // data valid
-    val txReady = Bool(OUTPUT) // can write (next) cycle, or FIFO not full?
 
     val rxData = UInt(OUTPUT, 8) // data from host to FPGA
     val rxReady = Bool(INPUT) // ready to receive more data
@@ -77,27 +77,46 @@ class AlteraJtag() extends Module {
 
   jtag.io.rst_n := ~reset
 
-  // Have better names.
+  // Altera Atlantic interface, mapped to nicer names and some translation.
   // Inspired by Tommy and the AXI interface.
-  // Maybe the signals should be Bool?
-  // Altera Atlantic interface (mapped to nicer names)
 
-  // Assuming host is master, FPGA slave
+  // Assuming host is master, FPGA slave.
+  // Register valid and data on behalf of the user of AlteraJtag.
+  // Accept one cycle delay - not an issue here.
   //
-  // clock             /--\__/--\__/--\__/--\__/--\__/--\__
+  // clock             /--\__/--\__/--\__/--\__/--\__/--\__/--\__
   //
-  // M: ena, txReady:  _______/-----\___________/----------
+  // M: ena, txReady:  _______/-----???????___________/----------
   //
-  // S: val, txValid:  _____________/-----------\__________
-  //
-  // S: dat, txData:   XXXXXXXXXXXXXX Data       XXXXXXXXX
+  // S: txValid     :  _____________/-----\______________________
+  // S: txData      :  XXXXXXXXXXXXXX Dat XXXXXXXXXXXXXXXXXXXXXXX
+  // translated to
+  // S: val         :  ___________________/----------------\_____
+  // S: dat         :   XXXXXXXXXXXXXXXXXXX Data           XXXXXX
   //
   // Master requests new data with ena.
   // Slave holds data until master requests new data.
+  // Latch it here.
   //
+
   io.txReady := jtag.io.r_ena
-  jtag.io.r_val := io.txValid
-  jtag.io.r_dat := io.txData
+
+  val validReg = Reg(init = Bool(false))
+  val dataReg = Reg(init = UInt(0, 8))
+  
+  // latch valid and data on a txValid
+  when(io.txValid) {
+    validReg := Bool(true)
+    dataReg := io.txData
+  }.otherwise {
+    // reset valid on new data request with ena
+    when(jtag.io.r_ena === UInt(1)) {
+      validReg := Bool(false)
+    }
+
+  }
+  jtag.io.r_val := validReg
+  jtag.io.r_dat := dataReg
 
   // Host is master, FPGA slave
   //
@@ -144,9 +163,10 @@ class AlteraJtagEcho(resetSignal: Bool = null) extends Module(_reset = resetSign
     }
   }
 
-  jtag.io.rxReady := !isFullReg && (jtag.io.rxValid =/= UInt(1))
-  jtag.io.txValid := isFullReg
   jtag.io.txData := dataReg
+  jtag.io.txValid := isFullReg && jtag.io.txReady
+
+  jtag.io.rxReady := !isFullReg && (jtag.io.rxValid =/= UInt(1))
 
   // blink on receiving a character
   val blink = Reg(init = UInt(0, 1))
