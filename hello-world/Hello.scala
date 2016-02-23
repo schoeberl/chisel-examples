@@ -8,37 +8,35 @@
  * Blinking LED: the FPGA version of Hello World
  */
 
-package hello
-
 import Chisel._
-import Node._
 
 /**
  * The blinking LED component.
- * 
- * The BeMicro has a 16 MHz clock.
- * The DE0 has a 50 MHz clock.
  */
 
 class Hello extends Module {
   val io = new Bundle {
     val led = UInt(OUTPUT, 1)
   }
-  val CNT_MAX = UInt(16000000 / 2 - 1);
-  val r1 = Reg(init = UInt(0, 25))
-  val blk = Reg(init = UInt(0, 1))
+  val CNT_MAX = UInt(20000000 / 2 - 1);
+  
+  val cntReg = Reg(init = UInt(0, 25))
+  val blkReg = Reg(init = UInt(0, 1))
 
-  r1 := r1 + UInt(1)
-  when(r1 === CNT_MAX) {
-    r1 := UInt(0)
-    blk := ~blk
+  cntReg := cntReg + UInt(1)
+  when(cntReg === CNT_MAX) {
+    cntReg := UInt(0)
+    blkReg := ~blkReg
   }
-  io.led := blk
+  io.led := blkReg
 }
 
-// Generate the Verilog code by invoking chiselMain() in our main()
-object HelloMain {
+/**
+ * An object containing a main() to invoke chiselMain()
+ * to generate the Verilog code.
+ */
+object Hello {
   def main(args: Array[String]): Unit = {
-    chiselMain(args, () => Module(new Hello()))
+    chiselMain(Array[String]("--backend", "v"), () => Module(new Hello()))
   }
 }

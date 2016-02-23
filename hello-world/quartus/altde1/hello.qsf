@@ -29,7 +29,7 @@ set_global_assignment -name DEVICE EP2C20F484C7
 
 set_global_assignment -name TOP_LEVEL_ENTITY hello_top
 set_global_assignment -name VERILOG_FILE ../../verilog/hello_top.v
-set_global_assignment -name VERILOG_FILE ../../generated/Hello.v
+set_global_assignment -name VERILOG_FILE ../../Hello.v
 
 set_global_assignment -name VERILOG_MACRO "SYNTHESIS=<None>"
 
