@@ -41,6 +41,7 @@ class Tx(frequency: Int, baudRate: Int) extends Module {
   io.channel.ready := (cntReg === UInt(0)) && (bitsReg === UInt(0))
   io.txd := shiftReg(0)
 
+  // TODO: make the counter a tick generator
   when(cntReg === UInt(0)) {
 
     cntReg := UInt(BIT_CNT)
@@ -111,8 +112,31 @@ class BufferedTx(frequency: Int, baudRate: Int) extends Module {
   io.txd <> tx.io.txd
 }
 
+/**
+ * Send 'hello'.
+ */
+class Sender(frequency: Int, baudRate: Int) extends Module {
+  val io = new Bundle {
+    val txd = Bits(OUTPUT, 1)    
+  }
+  
+  val tx = Module(new BufferedTx(frequency, baudRate))
+  
+  io.txd := tx.io.txd
+  
+  // This is not super elegant
+  val hello = Array[Bits](Bits('H'), Bits('e'), Bits('l'), Bits('l'), Bits('o'))
+  val text = Vec[Bits](hello)
 
-
+  val cntReg = Reg(init = UInt(0, 3))
+  
+  tx.io.channel.data := text(cntReg)
+  tx.io.channel.valid := Bool(true)
+  
+  when (tx.io.channel.ready) {
+    cntReg := cntReg + UInt(1)
+  }
+}
 
 class TxTester(dut: Tx) extends Tester(dut) {
 
@@ -165,6 +189,21 @@ object BufferedTxTester {
       "--genHarness", "--vcd", "--targetDir", "generated"),
       () => Module(new BufferedTx(10000, 3000))) {
         c => new BufferedTxTester(c)
+      }
+  }
+}
+
+class SenderTester(dut: Sender) extends Tester(dut) {
+
+  step(300)
+}
+
+object SenderTester {
+  def main(args: Array[String]): Unit = {
+    chiselMainTest(Array[String]("--backend", "c", "--compile", "--test",
+      "--genHarness", "--vcd", "--targetDir", "generated"),
+      () => Module(new Sender(10000, 3000))) {
+        c => new SenderTester(c)
       }
   }
 }
