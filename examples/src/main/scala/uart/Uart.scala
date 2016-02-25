@@ -12,24 +12,41 @@ package uart
 import Chisel._
 
 /**
- * Transmit part of the UART.
- * Use an AXI like valid/ready handshake process.
+ * This is a minimal AXI style data plus handshake channel.
  */
-class UartTx(frequency: Int, baudRate: Int) extends Module {
+class Channel extends Bundle {
+  val data = Bits(INPUT, 8)
+  val ready = Bool(OUTPUT)
+  val valid = Bool(INPUT)
+}
+
+class Buffer extends Module {
+  val io = new Bundle {
+    val in = new Channel()
+    val out = new Channel().flip
+  }
+
+  io.in <> io.out
+}
+
+/**
+ * Transmit part of the UART.
+ * A minimal version without any additional buffering.
+ * Use an AXI like valid/ready handshake.
+ */
+class Tx(frequency: Int, baudRate: Int) extends Module {
   val io = new Bundle {
     val txd = Bits(OUTPUT, 1)
-    val din = Bits(INPUT, 8)
-    val ready = Bool(OUTPUT)
-    val valid = Bool(INPUT)
+    val channel = new Channel()
   }
 
   val BIT_CNT = UInt((frequency + baudRate / 2) / baudRate - 1)
 
-  val shiftReg = Reg(init = Bits(0, 1 + 8 + 2))
+  val shiftReg = Reg(init = Bits(0x3f))
   val cntReg = Reg(init = UInt(0, 20))
   val bitsReg = Reg(init = UInt(0, 4))
 
-  io.ready := (cntReg === UInt(0)) && (bitsReg === UInt(0))
+  io.channel.ready := (cntReg === UInt(0)) && (bitsReg === UInt(0))
   io.txd := shiftReg(0)
 
   when(cntReg === UInt(0)) {
@@ -40,11 +57,11 @@ class UartTx(frequency: Int, baudRate: Int) extends Module {
       shiftReg := Cat(Bits(1), shift(9, 0))
       bitsReg := bitsReg - UInt(1)
     }.otherwise {
-      when(io.valid) {
+      when(io.channel.valid) {
         shiftReg(0) := Bits(0) // start bit
-        shiftReg(8, 1) := io.din // data
+        shiftReg(8, 1) := io.channel.data // data
         shiftReg(10, 9) := Bits(3) // two stop bits
-        bitsReg := UInt(1 + 8 + 2)
+        bitsReg := UInt(11)
       }.otherwise {
         shiftReg := Bits(0x3f)
       }
@@ -58,12 +75,27 @@ class UartTx(frequency: Int, baudRate: Int) extends Module {
 }
 
 /**
+ * A transmitter with a single buffer.
+ */
+class BufferedTx(frequency: Int, baudRate: Int) extends Module {
+  val io = new Bundle {
+    val txd = Bits(OUTPUT, 1)
+    val channel = new Channel()
+  }
+  val tx = Module(new Tx(frequency, baudRate))
+  val buf = Module(new Buffer())
+  
+  buf.io.in <> io.channel 
+  tx.io.channel <> buf.io.out
+  io.txd <> tx.io.txd
+}
+
+
+/**
  * A basic UART.
  */
 class Uart extends Module {
   val io = new Bundle {
-    //    val sw = UInt(INPUT, 10)
-    //    val led = UInt(OUTPUT, 10)
     val rxd = Bits(INPUT, 1)
     val txd = Bits(OUTPUT, 1)
   }
@@ -76,7 +108,6 @@ class Uart extends Module {
 
 }
 
-// Generate the Verilog code by invoking chiselMain() in our main()
 object UartMain {
   def main(args: Array[String]): Unit = {
     println("Hello from UART")
@@ -84,20 +115,20 @@ object UartMain {
   }
 }
 
-class UartTester(dut: UartTx) extends Tester(dut) {
+class UartTester(dut: Tx) extends Tester(dut) {
 
   step(2)
-  poke(dut.io.valid, 1)
-  poke(dut.io.din, 'A')
+  poke(dut.io.channel.valid, 1)
+  poke(dut.io.channel.data, 'A')
   step(4)
-  poke(dut.io.valid, 0)
-  poke(dut.io.din, 0)
+  poke(dut.io.channel.valid, 0)
+  poke(dut.io.channel.data, 0)
   step(40)
-  poke(dut.io.valid, 1)
-  poke(dut.io.din, 'B')
+  poke(dut.io.channel.valid, 1)
+  poke(dut.io.channel.data, 'B')
   step(4)
-  poke(dut.io.valid, 0)
-  poke(dut.io.din, 0)
+  poke(dut.io.channel.valid, 0)
+  poke(dut.io.channel.data, 0)
   step(30)
 }
 
@@ -105,7 +136,7 @@ object UartTester {
   def main(args: Array[String]): Unit = {
     chiselMainTest(Array[String]("--backend", "c", "--compile", "--test",
       "--genHarness", "--vcd", "--targetDir", "generated"),
-      () => Module(new UartTx(10000, 3000))) {
+      () => Module(new Tx(10000, 3000))) {
         c => new UartTester(c)
       }
   }
