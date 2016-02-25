@@ -20,14 +20,6 @@ class Channel extends Bundle {
   val valid = Bool(INPUT)
 }
 
-class Buffer extends Module {
-  val io = new Bundle {
-    val in = new Channel()
-    val out = new Channel().flip
-  }
-
-  io.in <> io.out
-}
 
 /**
  * Transmit part of the UART.
@@ -75,6 +67,35 @@ class Tx(frequency: Int, baudRate: Int) extends Module {
 }
 
 /**
+ * A single byte buffer with an AXI style channel
+ */
+class Buffer extends Module {
+  val io = new Bundle {
+    val in = new Channel()
+    val out = new Channel().flip
+  }
+
+  val empty :: full :: Nil = Enum(UInt(), 2)
+  val stateReg = Reg(init = empty)
+  val dataReg = Reg(init = Bits(0, 8))
+  
+  io.in.ready := stateReg === empty
+  io.out.valid := stateReg === full
+  
+  when (stateReg === empty) {
+    when (io.in.valid) {
+      dataReg := io.in.data
+      stateReg := full
+    }
+  }.otherwise { // full, io.out.valid := true
+    when (io.out.ready) {
+      stateReg := empty
+    }
+  }
+  io.out.data := dataReg
+}
+
+/**
  * A transmitter with a single buffer.
  */
 class BufferedTx(frequency: Int, baudRate: Int) extends Module {
@@ -91,31 +112,9 @@ class BufferedTx(frequency: Int, baudRate: Int) extends Module {
 }
 
 
-/**
- * A basic UART.
- */
-class Uart extends Module {
-  val io = new Bundle {
-    val rxd = Bits(INPUT, 1)
-    val txd = Bits(OUTPUT, 1)
-  }
 
-  // input synchronization
-  val regSyn1 = Reg(next = io.rxd)
-  val regSyn2 = Reg(next = regSyn1)
-  // just echo to check the pin assignment
-  io.txd := regSyn2
 
-}
-
-object UartMain {
-  def main(args: Array[String]): Unit = {
-    println("Hello from UART")
-    chiselMain(args, () => Module(new Uart()))
-  }
-}
-
-class UartTester(dut: Tx) extends Tester(dut) {
+class TxTester(dut: Tx) extends Tester(dut) {
 
   step(2)
   poke(dut.io.channel.valid, 1)
@@ -132,12 +131,40 @@ class UartTester(dut: Tx) extends Tester(dut) {
   step(30)
 }
 
-object UartTester {
+object TxTester {
   def main(args: Array[String]): Unit = {
     chiselMainTest(Array[String]("--backend", "c", "--compile", "--test",
       "--genHarness", "--vcd", "--targetDir", "generated"),
       () => Module(new Tx(10000, 3000))) {
-        c => new UartTester(c)
+        c => new TxTester(c)
+      }
+  }
+}
+
+class BufferedTxTester(dut: BufferedTx) extends Tester(dut) {
+
+  step(2)
+  poke(dut.io.channel.valid, 1)
+  poke(dut.io.channel.data, 'A')
+  // now we have a buffer, keep valid only a single cycle
+  step(1)
+  poke(dut.io.channel.valid, 0)
+  poke(dut.io.channel.data, 0)
+  step(40)
+  poke(dut.io.channel.valid, 1)
+  poke(dut.io.channel.data, 'B')
+  step(1)
+  poke(dut.io.channel.valid, 0)
+  poke(dut.io.channel.data, 0)
+  step(30)
+}
+
+object BufferedTxTester {
+  def main(args: Array[String]): Unit = {
+    chiselMainTest(Array[String]("--backend", "c", "--compile", "--test",
+      "--genHarness", "--vcd", "--targetDir", "generated"),
+      () => Module(new BufferedTx(10000, 3000))) {
+        c => new BufferedTxTester(c)
       }
   }
 }
