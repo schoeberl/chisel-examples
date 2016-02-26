@@ -31,8 +31,8 @@ begin
     -- TODO reset generation
     reset <= '0';
     
---    s: Sender port map(clk, reset, --rxd, txd);
+    s: Sender port map(clk, reset, txd);
 
-    txd <= rxd;
+--    txd <= rxd;
 
 end rtl;
