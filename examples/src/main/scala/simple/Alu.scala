@@ -7,9 +7,9 @@
  * 
  */
 
+package simple
+
 import Chisel._
-import Node._
-import scala.collection.mutable.HashMap
 
 /**
  * This is a very basic ALU example.

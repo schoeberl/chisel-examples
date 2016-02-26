@@ -24,7 +24,7 @@ TEST_ARGS_VCD = --genHarness --test --backend c --compile --vcd --targetDir gene
 
 # Generate Verilog code
 alu:
-	$(SBT) "run-main AluMain $(HW_ARGS)"
+	$(SBT) "run-main simple.AluMain $(HW_ARGS)"
 
 knight:
 	$(SBT) "run-main simple.KnightMain $(HW_ARGS)"
@@ -34,7 +34,7 @@ uart:
 
 # Generate the C++ simulation and test it
 alu-test:
-	$(SBT) "run-main AluTester $(TEST_ARGS)"
+	$(SBT) "run-main simple.AluTester $(TEST_ARGS)"
 
 # TODO: decide on a naming convention related to testing
 
