@@ -18,15 +18,21 @@ end uart_top;
 
 architecture rtl of uart_top is
 
-component Uart is
+component Sender is
 port (clk : std_logic;
--- reset : in std_logic;
-      io_rxd : in std_logic;
+      reset : in std_logic;
+--      io_rxd : in std_logic;
       io_txd : out std_logic);
 end component;
 
+   signal reset : std_logic;
+
 begin
     -- TODO reset generation
-    ua1: Uart port map(clk, rxd, txd);
+    reset <= '0';
+    
+--    s: Sender port map(clk, reset, --rxd, txd);
+
+    txd <= rxd;
 
 end rtl;

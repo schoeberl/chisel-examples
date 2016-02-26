@@ -198,12 +198,38 @@ class SenderTester(dut: Sender) extends Tester(dut) {
   step(300)
 }
 
+
+
 object SenderTester {
   def main(args: Array[String]): Unit = {
-    chiselMainTest(Array[String]("--backend", "c", "--compile", "--test",
+    chiselMainTest(Array[String]("--backend", "v", "--compile", "--test",
       "--genHarness", "--vcd", "--targetDir", "generated"),
       () => Module(new Sender(10000, 3000))) {
         c => new SenderTester(c)
       }
+  }
+}
+
+object SenderMain {
+  def main(args: Array[String]): Unit = {
+    chiselMain(Array[String]("--backend", "v", "--targetDir", "generated"),
+      () => Module(new Sender(50000000, 115200)))
+  }
+}
+
+ 
+class Echo extends Module {
+  val io = new Bundle {
+    val txd = Bits(OUTPUT, 1) 
+    val rxd = Bits(INPUT, 1)
+  }
+  
+  io.txd := io.rxd 
+}
+
+object EchoMain {
+  def main(args: Array[String]): Unit = {
+    chiselMain(Array[String]("--backend", "v", "--targetDir", "generated"),
+      () => Module(new Echo()))
   }
 }
