@@ -68,7 +68,8 @@ class AluTop extends Module {
 object AluMain {
   def main(args: Array[String]): Unit = {
     println("Generating the ALU hardware")
-    chiselMain(args, () => Module(new AluTop()))
+    chiselMain(Array[String]("--backend", "v", "--targetDir", "generated"),
+      () => Module(new AluTop()))
   }
 }
 
@@ -103,8 +104,10 @@ class AluTester(dut: Alu) extends Tester(dut) {
 object AluTester {
   def main(args: Array[String]): Unit = {
     println("Testing the ALU")
-    chiselMainTest(args, () => Module(new Alu())) {
-      f => new AluTester(f)
-    }
+    chiselMainTest(Array[String]("--genHarness", "--test", "--backend", "c",
+      "--compile", "--targetDir", "generated"),
+      () => Module(new Alu())) {
+        f => new AluTester(f)
+      }
   }
 }

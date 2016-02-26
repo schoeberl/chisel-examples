@@ -10,8 +10,6 @@
 package simple
 
 import Chisel._
-import Node._
-import scala.collection.mutable.HashMap
 
 /*
  * On signal naming:
@@ -80,9 +78,6 @@ class BubbleFifo(size: Int, depth: Int) extends Module {
   }
 
   val stage = Module(new FifoRegister(size))
-  // could we simple use Scala arrays in the following?
-  // val buffers = Vec.fill(depth) {new FifoRegister(size) }
-  // We need to use Scala arrays! Vec is only for Data aggregate.
   val buffers = Array.fill(depth) { Module(new FifoRegister(size)) }
   for (i <- 0 until depth - 1) {
     buffers(i + 1).io.enq.din := buffers(i).io.deq.dout
@@ -173,8 +168,10 @@ class FifoTester(dut: BubbleFifo) extends Tester(dut) {
 
 object FifoTester {
   def main(args: Array[String]): Unit = {
-    chiselMainTest(args, () => Module(new BubbleFifo(8, 4))) {
-      f => new FifoTester(f)
-    }
+    chiselMainTest(Array[String]("--genHarness", "--test", "--backend", "c",
+      "--compile", "--vcd", "--targetDir", "generated"),
+      () => Module(new BubbleFifo(8, 4))) {
+        f => new FifoTester(f)
+      }
   }
 }

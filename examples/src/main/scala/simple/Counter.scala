@@ -42,8 +42,10 @@ class CounterTester(c: Counter) extends Tester(c) {
  */
 object CounterMain {
   def main(args: Array[String]): Unit = {
-    chiselMainTest(args, () => Module(new Counter(4))) {
-      c => new CounterTester(c)
-    }
+    chiselMainTest(Array[String]("--genHarness", "--test", "--backend", "c",
+      "--compile", "--targetDir", "generated"),
+      () => Module(new Counter(4))) {
+        c => new CounterTester(c)
+      }
   }
 }

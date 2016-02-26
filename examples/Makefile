@@ -1,48 +1,37 @@
 #
-# Building a Hello World Chisel without too much sbt/scala/... stuff
+# Building Chisel examples without too much sbt/scala/... stuff
 #
 # sbt looks for default into a folder ./project and . for build.sdt and Build.scala
 # sbt creates per default a ./target folder
 
 SBT = sbt
 
-# This generates the Verilog and C++ files by invoking main from
-# class HelloMain in package hello.
-# The source directory is configured in build.sbt.
-# The Scala/Java build directory is default ./target.
-
-# The first two arguments are consumed by sbt, the rest is
-# forwarded to the Scala/Chisel main().
-
-# Maybe change at some point to have the main class as a define
-# that can be overwriteen, such as:
-#MAIN=example.AluMain
-
-HW_ARGS = --targetDir generated --backend v
-TEST_ARGS = --genHarness --test --backend c --compile --targetDir generated
-TEST_ARGS_VCD = --genHarness --test --backend c --compile --vcd --targetDir generated
 
 # Generate Verilog code
+
 alu:
-	$(SBT) "run-main simple.AluMain $(HW_ARGS)"
+	$(SBT) "run-main simple.AluMain"
 
 knight:
-	$(SBT) "run-main simple.KnightMain $(HW_ARGS)"
+	$(SBT) "run-main simple.KnightMain"
 
 uart:
-	$(SBT) "run-main UartMain $(HW_ARGS)"
+	$(SBT) "run-main uart.SenderMain"
 
-# Generate the C++ simulation and test it
+
+# Generate the C++ simulation and run the tests
+
 alu-test:
-	$(SBT) "run-main simple.AluTester $(TEST_ARGS)"
+	$(SBT) "run-main simple.AluTester"
 
-# TODO: decide on a naming convention related to testing
+counter:
+	$(SBT) "run-main simple.CounterMain"
 
 knight-test:
-	$(SBT) "run-main simple.KnightTest $(TEST_ARGS)"
+	$(SBT) "run-main simple.KnightTest"
 
 fifo-test:
-	$(SBT) "run-main simple.FifoTester $(TEST_ARGS_VCD)"
+	$(SBT) "run-main simple.FifoTester"
 
 fifo-view:
 	gtkwave generated/BubbleFifo.vcd --save=bubble.gtkw
@@ -50,6 +39,3 @@ fifo-view:
 fifo: fifo-test fifo-view
 
 
-
-counter:
-	$(SBT) "run-main simple.CounterMain $(TEST_ARGS)"
