@@ -25,7 +25,7 @@ alu-test:
 	$(SBT) "run-main simple.AluTester"
 
 counter:
-	$(SBT) "run-main simple.CounterMain"
+	$(SBT) "run-main simple.CounterTester"
 
 knight-test:
 	$(SBT) "run-main simple.KnightTest"

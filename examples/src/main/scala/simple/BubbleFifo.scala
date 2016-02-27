@@ -168,7 +168,7 @@ class FifoTester(dut: BubbleFifo) extends Tester(dut) {
 
 object FifoTester {
   def main(args: Array[String]): Unit = {
-    chiselMainTest(Array[String]("--genHarness", "--test", "--backend", "c",
+    chiselMainTest(Array("--genHarness", "--test", "--backend", "c",
       "--compile", "--vcd", "--targetDir", "generated"),
       () => Module(new BubbleFifo(8, 4))) {
         f => new FifoTester(f)

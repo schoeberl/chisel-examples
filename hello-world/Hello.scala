@@ -37,6 +37,6 @@ class Hello extends Module {
  */
 object Hello {
   def main(args: Array[String]): Unit = {
-    chiselMain(Array[String]("--backend", "v"), () => Module(new Hello()))
+    chiselMain(Array("--backend", "v"), () => Module(new Hello()))
   }
 }

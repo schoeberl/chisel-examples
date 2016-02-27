@@ -229,7 +229,7 @@ class Echo extends Module {
 
 object EchoMain {
   def main(args: Array[String]): Unit = {
-    chiselMain(Array[String]("--backend", "v", "--targetDir", "generated"),
+    chiselMain(Array("--backend", "v", "--targetDir", "generated"),
       () => Module(new Echo()))
   }
 }

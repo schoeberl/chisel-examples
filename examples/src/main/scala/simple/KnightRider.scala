@@ -115,7 +115,7 @@ class KnightTester(dut: KnightRider) extends Tester(dut) {
  */
 object KnightTest {
   def main(args: Array[String]): Unit = {
-    chiselMainTest(Array[String]("--genHarness", "--test", "--backend", "c",
+    chiselMainTest(Array("--genHarness", "--test", "--backend", "c",
       "--compile", "--targetDir", "generated"),
       () => Module(new KnightRider(null, 12))) {
         c => new KnightTester(c)
@@ -149,7 +149,7 @@ class KnightTop extends Module {
 
 object KnightMain {
   def main(args: Array[String]): Unit = {
-    chiselMain(Array[String]("--backend", "v", "--targetDir", "generated"),
+    chiselMain(Array("--backend", "v", "--targetDir", "generated"),
       () => Module(new KnightTop()))
   }
 }
