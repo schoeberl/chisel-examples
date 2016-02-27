@@ -131,9 +131,9 @@ class Sender(frequency: Int, baudRate: Int) extends Module {
   val cntReg = Reg(init = UInt(0, 3))
   
   tx.io.channel.data := text(cntReg)
-  tx.io.channel.valid := Bool(true)
+  tx.io.channel.valid := cntReg =/= UInt(5)
   
-  when (tx.io.channel.ready) {
+  when (tx.io.channel.ready && cntReg =/= UInt(5)) {
     cntReg := cntReg + UInt(1)
   }
 }
