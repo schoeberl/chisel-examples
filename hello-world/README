@@ -10,16 +10,13 @@ Therefore, this is a try to cut it down to the minimum.
 
 The example project consists of:
 
-   src/hello/Hello.scala  The source of the hardware description of a blinking LED
+   Hello.scala            The source of the hardware description of a blinking LED
    Makefile               drives the build process
    build.sbt              Configuration to download Chisel and for the Chisel project
    verilog/hello_top.v    is a top level file for the FPGA
    quartus/altde0         Altera Quartus project files for the DE0 board
    quartus/altde1         Altera Quartus project files for the DE1 board
    quartus/bemicro        Altera Quartus project files for the BeMicro board
-
-The actual project configuration (files, folders, main entry,...) is
-distributed in build.sbt and as parameters to Chisel in the Makefile.
 
 Remarks and comments are distributed over the individual files.
 
