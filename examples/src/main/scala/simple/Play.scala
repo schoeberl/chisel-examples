@@ -27,6 +27,31 @@ object Helper {
   }
 }
 
+class AluFields extends Bundle {
+  val function = UInt(2)
+  val inputA = UInt(8)
+  val inputB = UInt(8)
+  val result = UInt(8)
+}
+
+class AluIO extends Bundle {
+  val function = UInt(INPUT, 2)
+  val inputA = UInt(INPUT, 8)
+  val inputB = UInt(INPUT, 8)
+  val result = UInt(OUTPUT, 8)
+}
+
+class Channel extends Bundle {
+  val data = UInt(INPUT, 32)
+  val ready = Bool(OUTPUT)
+  val valid = Bool(INPUT)
+}
+
+class ChannelUsage extends Bundle {
+  val input = new Channel()
+  val output = new Channel().flip()
+}
+
 class AluOp extends Bundle {
   val op = UInt(width = 4)
 }
@@ -74,6 +99,23 @@ class Memory extends Module {
   }
 }
 
+class Count extends Module {
+  val io = new Bundle {
+    val cnt = UInt(OUTPUT, 8)
+  }
+
+  val cntReg = Reg(init = UInt(0, 8))
+
+  //cntReg := Mux(cntReg === UInt(100), UInt(0), cntReg + UInt(1))
+
+  cntReg := cntReg + UInt(1)
+  when(cntReg === UInt(100)) {
+    cntReg := UInt(0)
+  }
+
+  io.cnt := cntReg
+}
+
 class CPU extends Module {
   val io = new Bundle {
     val leds = UInt(OUTPUT, 4)
@@ -98,23 +140,52 @@ class CPU extends Module {
   val a = UInt(width = 8)
   val b = UInt(width = 8)
   val d = UInt(width = 8)
-  
+
   val cond = a =/= b
 
   val c = Mux(cond, a, b)
-  
+
+  val condition = cond
+  val trueVal = a
+  val falseVal = b
+
+  val selection = Mux(cond, trueVal, falseVal)
+
   (a | b) & ~(c ^ d)
 
+  val c1 = Bool(true)
+  val c2 = Bool(false)
+  val c3 = Bool(false)
+
+  val v = UInt(5)
+  when(condition) {
+    v := UInt(0)
+  }
+
+  when(c1) { v := UInt(1) }
+  when(c2) { v := UInt(2) }
+
+  when(c1) { v := UInt(1) }
+    .elsewhen(c2) { v := UInt(2) }
+    .otherwise { v := UInt(3) }
+    
+  val latch = UInt(width = 5)
+  when (cond) {
+    latch := UInt(3)
+  }
+
   def addSub(add: Bool, a: UInt, b: UInt) =
-    Mux(add, a+b, a-b)
+    Mux(add, a + b, a - b)
 
   val res = addSub(cond, a, b)
-  
+
   def rising(d: Bool) = d && !Reg(next = d)
 
   val edge = rising(cond)
-  
-  val myVec = Vec.fill(3){ SInt(width = 10) }
+
+  val risingEdge = d & !Reg(next = d)
+
+  val myVec = Vec.fill(3) { SInt(width = 10) }
   val y = myVec(2)
   myVec(0) := SInt(-3)
 }
@@ -134,7 +205,10 @@ class Play(size: Int) extends Module {
 
   val nextVal = r1
   val r = Reg(next = nextVal)
-  
+
+  val initReg = Reg(init = UInt(0, 8))
+  initReg := initReg + UInt(1)
+
   printf("Counting %x\n", r1)
 
   val a = io.a
@@ -145,11 +219,11 @@ class Play(size: Int) extends Module {
   val boolVal = a >= b
 
   val cpu = Module(new CPU())
-  
+
   val cores = new Array[Module](32)
   for (j <- 0 until 32)
     cores(j) = Module(new CPU())
-    
+
   io.out := r1
 }
 
@@ -163,6 +237,10 @@ class PlayTester(c: Play) extends Tester(c) {
     println(peek(c.io.out))
     step(1)
   }
+  
+  for (i <- 0 until 5) {
+    println(i)
+  }
 }
 
 /**
@@ -175,5 +253,34 @@ object PlayTester {
       () => Module(new Play(4))) {
         c => new PlayTester(c)
       }
+  }
+}
+
+// A simple class
+class Example {
+  // A field, initialized in the constructor
+  var n = 0
+  
+  // A setter method
+  def set(v: Integer) {
+    n = v
+  }
+  
+  // Another method
+  def print() {
+    println(n)
+  }
+}
+
+// A singleton object
+object Example {
+  
+  // The start of a Scala program
+  def main(args: Array[String]): Unit = {
+    
+    val e = new Example()
+    e.print()
+    e.set(42)
+    e.print()
   }
 }
