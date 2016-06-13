@@ -3,7 +3,7 @@
  * Author: Martin Schoeberl (martin@jopdesign.com)
  * License: Simplified BSD License
  * 
- * Code snippets for the slides.
+ * Code snippets for Chisel slides.
  * 
  */
 
@@ -168,9 +168,9 @@ class CPU extends Module {
   when(c1) { v := UInt(1) }
     .elsewhen(c2) { v := UInt(2) }
     .otherwise { v := UInt(3) }
-    
+
   val latch = UInt(width = 5)
-  when (cond) {
+  when(cond) {
     latch := UInt(3)
   }
 
@@ -185,6 +185,19 @@ class CPU extends Module {
 
   val risingEdge = d & !Reg(next = d)
 
+  def counter(n: UInt) = {
+    
+    val cntReg = Reg(init = UInt(0, 8))
+    
+    cntReg := cntReg + UInt(1)
+    when(cntReg === n) {
+      cntReg := UInt(0)
+    }
+    cntReg
+  }
+
+  val conter100 = counter(UInt(100))
+  
   val myVec = Vec.fill(3) { SInt(width = 10) }
   val y = myVec(2)
   myVec(0) := SInt(-3)
@@ -197,6 +210,8 @@ class Play(size: Int) extends Module {
     val out = UInt(OUTPUT, size)
     val a = UInt(INPUT, 4)
     val b = UInt(INPUT, 4)
+    val c = UInt(INPUT, 4)
+    val d = UInt(INPUT, 4)
     val result = UInt(OUTPUT, 4)
   }
 
@@ -210,13 +225,21 @@ class Play(size: Int) extends Module {
   initReg := initReg + UInt(1)
 
   printf("Counting %x\n", r1)
+  //  println()
 
   val a = io.a
   val b = io.b
+  val c = io.c
+  val d = io.d
 
   val addVal = a + b
   val orVal = a | b
   val boolVal = a >= b
+
+  def adder(v1: UInt, v2: UInt) = v1 + v2
+
+  val add1 = adder(a, b)
+  val add2 = adder(c, d)
 
   val cpu = Module(new CPU())
 
@@ -232,12 +255,13 @@ class Play(size: Int) extends Module {
  */
 class PlayTester(c: Play) extends Tester(c) {
 
+  //  step(10)
   for (i <- 0 until 5) {
     println(i)
     println(peek(c.io.out))
     step(1)
   }
-  
+
   for (i <- 0 until 5) {
     println(i)
   }
@@ -256,31 +280,108 @@ object PlayTester {
   }
 }
 
+class AdderTester(dut: Adder) extends Tester(dut) {
+
+  // Set input values
+  poke(dut.io.a, 3)
+  poke(dut.io.b, 4)
+  // Execute one iteration
+  step(1)
+  // Print the result
+  val res = peek(dut.io.result)
+  println(res)
+
+  // Or compare against expected value
+  expect(dut.io.result, 7)
+}
+
+/**
+ * Create a counter and a tester.
+ */
+object AdderTester {
+  def main(args: Array[String]): Unit = {
+    chiselMainTest(Array("--genHarness", "--test", "--backend", "c",
+      "--compile", "--targetDir", "generated"),
+      () => Module(new Adder())) {
+        c => new AdderTester(c)
+      }
+  }
+}
+
 // A simple class
 class Example {
   // A field, initialized in the constructor
   var n = 0
-  
+
   // A setter method
   def set(v: Integer) {
     n = v
   }
-  
+
   // Another method
   def print() {
     println(n)
+  }
+
+  def foo() {
+
+    // Value is a constant
+    val i = 0
+    // No new assignment; will not compile
+    //i = 3
+
+    // Variable can change the value
+    var v = "Hello"
+    v = "Hello World"
+
+    // Type usually inferred, but can be declared
+    var s: String = "abc"
+  }
+
+  def bar() {
+
+    // Loops from 0 to 9
+    // Automatically creates loop value i
+    for (i <- 0 until 10) {
+      println(i)
+    }
+
+    for (i <- 0 until 10) {
+      if (i % 2 == 0) {
+        println(i + " is even")
+      } else {
+        println(i + " is odd")
+      }
+    }
+
+    // An integer array with 10 elements
+    val numbers = new Array[Integer](10)
+    for (i <- 0 until numbers.length) {
+      numbers(i) = i * 10
+    }
+    println(numbers(9))
+
+    // List of integers
+    val list = List(1, 2, 3)
+    println(list)
+    // Different form of list construction
+    val listenum = 'a' :: 'b' :: 'c' :: Nil
+    println(listenum)
+
   }
 }
 
 // A singleton object
 object Example {
-  
+
   // The start of a Scala program
   def main(args: Array[String]): Unit = {
-    
+
     val e = new Example()
     e.print()
     e.set(42)
     e.print()
+
+    e.bar()
   }
 }

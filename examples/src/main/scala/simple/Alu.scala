@@ -89,13 +89,13 @@ class AluTester(dut: Alu) extends Tester(dut) {
             case 2 => a | b
             case 3 => a & b
           }
-        val res = UInt((result & 0x0f), 4)
+        val resMask = result & 0x0f
 
         poke(dut.io.fn, op)
         poke(dut.io.a, a)
         poke(dut.io.b, b)
-        step(1) // for a truly combinational circuit not really needed
-        expect(dut.io.result, res.litValue())
+        step(1)
+        expect(dut.io.result, resMask)
       }
     }
   }
