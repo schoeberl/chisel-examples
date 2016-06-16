@@ -47,6 +47,12 @@ class Channel extends Bundle {
   val valid = Bool(INPUT)
 }
 
+class ParamChannel(n: Int) extends Bundle {
+  val data = UInt(INPUT, n)
+  val ready = Bool(OUTPUT)
+  val valid = Bool(INPUT)
+}
+
 class ChannelUsage extends Bundle {
   val input = new Channel()
   val output = new Channel().flip()
@@ -77,6 +83,17 @@ class Adder extends Module {
     val a = UInt(INPUT, 4)
     val b = UInt(INPUT, 4)
     val result = UInt(OUTPUT, 4)
+  }
+
+  val addVal = io.a + io.b
+  io.result := addVal
+}
+
+class ParamAdder(n: Int) extends Module {
+  val io = new Bundle {
+    val a = UInt(INPUT, n)
+    val b = UInt(INPUT, n)
+    val result = UInt(OUTPUT, n)
   }
 
   val addVal = io.a + io.b
@@ -186,9 +203,9 @@ class CPU extends Module {
   val risingEdge = d & !Reg(next = d)
 
   def counter(n: UInt) = {
-    
+
     val cntReg = Reg(init = UInt(0, 8))
-    
+
     cntReg := cntReg + UInt(1)
     when(cntReg === n) {
       cntReg := UInt(0)
@@ -197,10 +214,32 @@ class CPU extends Module {
   }
 
   val conter100 = counter(UInt(100))
-  
+
   val myVec = Vec.fill(3) { SInt(width = 10) }
   val y = myVec(2)
   myVec(0) := SInt(-3)
+
+  val ch32 = new ParamChannel(32)
+  val add8 = Module(new ParamAdder(8))
+
+  val inVal = UInt(0)
+
+  val shiftReg = Reg(init = UInt(0, 8))
+
+  shiftReg(0) := inVal
+
+  for (i <- 1 until 8) {
+    shiftReg(i) := shiftReg(i - 1)
+  }
+
+  val useA = false
+
+  class Base extends Module { val io = new Bundle() }
+  class VariantA extends Base { }
+  class VariantB extends Base { }
+
+  val m = if (useA) Module(new VariantA())
+  else Module(new VariantB())
 }
 /**
  * A simple, configurable counter that wraps around.
