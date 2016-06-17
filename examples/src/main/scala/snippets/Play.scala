@@ -4,10 +4,11 @@
  * License: Simplified BSD License
  * 
  * Code snippets for Chisel slides.
+ * Does not perform any useful function.
  * 
  */
 
-package simple
+package snippets
 
 import scala.io.Source._
 import Chisel._
