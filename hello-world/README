@@ -17,6 +17,8 @@ The example project consists of:
    quartus/altde0         Altera Quartus project files for the DE0 board
    quartus/altde1         Altera Quartus project files for the DE1 board
    quartus/bemicro        Altera Quartus project files for the BeMicro board
+   quartus/bemicro_cv_a9  Altera Quartus project files for the new BeMicro board
+   quartus/altde2-115     Altera Quartus project files for the DE2-115 board
 
 Remarks and comments are distributed over the individual files.
 

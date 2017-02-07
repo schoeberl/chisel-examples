@@ -17,8 +17,6 @@ The collection is organized as follows:
 
 **examples** is a collection of small Chisel projects.
 
-**from-source** are experiments to compile relative to the Chisel source.
-
 
 Needed Tools
 ============
