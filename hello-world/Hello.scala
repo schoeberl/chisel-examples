@@ -18,9 +18,9 @@ class Hello extends Module {
   val io = new Bundle {
     val led = UInt(OUTPUT, 1)
   }
-  val CNT_MAX = UInt(20000000 / 2 - 1);
+  val CNT_MAX = UInt(50000000 / 2 - 1);
   
-  val cntReg = Reg(init = UInt(0, 25))
+  val cntReg = Reg(init = UInt(0, 32))
   val blkReg = Reg(init = UInt(0, 1))
 
   cntReg := cntReg + UInt(1)
