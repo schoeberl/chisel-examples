@@ -3,7 +3,7 @@
 The shall be a collection of code examples for [Chisel](https://chisel.eecs.berkeley.edu/).
 
 This collection will be moved to the latest version of Chisel, Chisel 3.
-I will collect notes in [TowardsChisel3.md]
+I will collect notes in [TowardsChisel3](TowardsChisel3.md)
 
 # Getting the Examples
 
