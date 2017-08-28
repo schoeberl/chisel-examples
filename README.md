@@ -1,13 +1,11 @@
-Chisel Examples
-===============
+# Chisel Examples
 
-The shall be a collection of code examples for [Chisel](https://github.com/ucb-bar/chisel).
+The shall be a collection of code examples for [Chisel](https://chisel.eecs.berkeley.edu/).
 
-The collection shall be in a decent state to serve Advanced Computer Architecture
-in the spring semester.
+This collection will be moved to the latest version of Chisel, Chisel 3.
+I will collect notes in [TowardsChisel3.md]
 
-Getting the Examples
-====================
+# Getting the Examples
 
     $ git clone https://github.com/schoeberl/chisel-examples.git
 
@@ -18,9 +16,8 @@ The collection is organized as follows:
 **examples** is a collection of small Chisel projects.
 
 
-Needed Tools
-============
+# Needed Tools
 
-A recent version of Java
+ * A recent version of Java
 
-The Scala build tool [sbt](http://www.scala-sbt.org/)
+ * The Scala build tool [sbt](http://www.scala-sbt.org/)
