@@ -9,6 +9,7 @@
  */
 
 import Chisel._
+import chisel3.Driver
 
 /**
  * The blinking LED component.
@@ -37,6 +38,7 @@ class Hello extends Module {
  */
 object Hello {
   def main(args: Array[String]): Unit = {
-    chiselMain(Array("--backend", "v"), () => Module(new Hello()))
+    // chiselMain(Array("--backend", "v"), () => Module(new Hello()))
+    chisel3.Driver.execute(args, () => new Hello())
   }
 }
