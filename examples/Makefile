@@ -10,28 +10,28 @@ SBT = sbt
 # Generate Verilog code
 
 alu:
-	$(SBT) "run-main simple.AluMain"
+	$(SBT) "runMain simple.AluMain"
 
 knight:
-	$(SBT) "run-main simple.KnightMain"
+	$(SBT) "runMain simple.KnightMain"
 
 uart:
-	$(SBT) "run-main uart.SenderMain"
+	$(SBT) "runMain uart.SenderMain"
 
 
 # Generate the C++ simulation and run the tests
 
 alu-test:
-	$(SBT) "run-main simple.AluTester"
+	$(SBT) "runMain simple.AluTester"
 
 counter:
-	$(SBT) "run-main simple.CounterTester"
+	$(SBT) "runMain simple.CounterTester"
 
 knight-test:
-	$(SBT) "run-main simple.KnightTest"
+	$(SBT) "runMain simple.KnightTest"
 
 fifo-test:
-	$(SBT) "run-main simple.FifoTester"
+	$(SBT) "runMain simple.FifoTester"
 
 fifo-view:
 	gtkwave generated/BubbleFifo.vcd --save=bubble.gtkw
