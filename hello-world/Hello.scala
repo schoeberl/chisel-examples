@@ -39,6 +39,6 @@ class Hello extends Module {
 object Hello {
   def main(args: Array[String]): Unit = {
     // chiselMain(Array("--backend", "v"), () => Module(new Hello()))
-    chisel3.Driver.execute(args, () => new Hello())
+    chisel3.Driver.execute(Array[String](), () => new Hello())
   }
 }
