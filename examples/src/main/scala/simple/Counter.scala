@@ -24,28 +24,3 @@ class Counter(size: Int) extends Module {
 
   io.out := r1
 }
-
-/**
- * Test the counter by printing out the value at each clock cycle.
- */
-class CounterTester(c: Counter) extends Tester(c) {
-
-  for (i <- 0 until 5) {
-    println(i)
-    println(peek(c.io.out))
-    step(1)
-  }
-}
-
-/**
- * Create a counter and a tester.
- */
-object CounterTester {
-  def main(args: Array[String]): Unit = {
-    chiselMainTest(Array("--genHarness", "--test", "--backend", "c",
-      "--compile", "--targetDir", "generated"),
-      () => Module(new Counter(4))) {
-        c => new CounterTester(c)
-      }
-  }
-}

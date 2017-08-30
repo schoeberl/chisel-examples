@@ -99,29 +99,6 @@ class ResetGen(resetSignal: Bool = null) extends Module {
   }
 }
 
-/**
- * A simple tester that just runs some ticks
- */
-class KnightTester(dut: KnightRider) extends Tester(dut) {
-
-  for (i <- 0 until 30) {
-    println(peek(dut.io.led))
-    step(1)
-  }
-}
-
-/**
- * Run the tests at a lower frequency.
- */
-object KnightTest {
-  def main(args: Array[String]): Unit = {
-    chiselMainTest(Array("--genHarness", "--test", "--backend", "c",
-      "--compile", "--targetDir", "generated"),
-      () => Module(new KnightRider(null, 12))) {
-        c => new KnightTester(c)
-      }
-  }
-}
 
 /**
  * Top level to connect the button to the reset.
