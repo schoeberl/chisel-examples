@@ -1,5 +1,5 @@
 /*
- * Copyright: 2014, Technical University of Denmark, DTU Compute
+ * Copyright: 2014-2017, Technical University of Denmark, DTU Compute
  * Author: Martin Schoeberl (martin@jopdesign.com)
  * License: Simplified BSD License
  * 
@@ -83,7 +83,9 @@ class Rx(frequency: Int, baudRate: Int) extends Module {
   val BIT_CNT = UInt((frequency + baudRate / 2) / baudRate - 1)
   val START_CNT = UInt((3 * frequency / 2 + baudRate / 2) / baudRate - 1)
 
-  val rx = Reg(next = Reg(next = io.rxd))
+  // Sync in the asynchronous RX data
+  val rxReg = Reg(next = Reg(next = io.rxd))
+
   val shiftReg = Reg(init = Bits(0, 8))
   val cntReg = Reg(init = UInt(0, 20))
   val bitsReg = Reg(init = UInt(0, 4))
@@ -92,22 +94,22 @@ class Rx(frequency: Int, baudRate: Int) extends Module {
   when(cntReg =/= UInt(0)) {
     cntReg := cntReg - UInt(1)
   }.elsewhen(bitsReg =/= UInt(0)) {
-      cntReg := BIT_CNT
-      shiftReg := Cat(rx, shiftReg >> 1)
-      bitsReg := bitsReg - UInt(1)
-      // the last shifted in
-      when (bitsReg === UInt(1)) {
-        valReg := Bool(true)
-      }
-  }.elsewhen(rx === UInt(0)) { // wait 1.5 bits after falling edge of start
+    cntReg := BIT_CNT
+    shiftReg := Cat(rxReg, shiftReg >> 1)
+    bitsReg := bitsReg - UInt(1)
+    // the last shifted in
+    when(bitsReg === UInt(1)) {
+      valReg := Bool(true)
+    }
+  }.elsewhen(rxReg === UInt(0)) { // wait 1.5 bits after falling edge of start
     cntReg := START_CNT
     bitsReg := UInt(8)
   }
-  
-  when (io.channel.ready) {
+
+  when(io.channel.ready) {
     valReg := Bool(false)
   }
-  
+
   io.channel.data := shiftReg
   io.channel.valid := valReg
 }
@@ -187,6 +189,23 @@ object SenderMain {
   def main(args: Array[String]): Unit = {
     chiselMain(Array[String]("--backend", "v", "--targetDir", "generated"),
       () => Module(new Sender(50000000, 115200)))
+  }
+}
+
+class UartMain(frequency: Int, baudRate: Int) extends Module {
+  val io = new Bundle {
+    val rxd = Bits(INPUT, 1)
+    val txd = Bits(OUTPUT, 1)
+  }
+  
+  val u = Module(new Sender(50000000, 115200))
+  io.txd := u.io.txd
+}
+
+object UartMain {
+  def main(args: Array[String]): Unit = {
+    chiselMain(Array[String]("--backend", "v", "--targetDir", "generated"),
+      () => Module(new UartMain(50000000, 115200)))
   }
 }
 

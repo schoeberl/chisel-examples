@@ -16,7 +16,7 @@ knight:
 	$(SBT) "runMain simple.KnightMain"
 
 uart:
-	$(SBT) "runMain uart.SenderMain"
+	$(SBT) "runMain uart.UartMain"
 
 
 # Generate the C++ simulation and run the tests
