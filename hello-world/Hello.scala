@@ -8,7 +8,7 @@
  * Blinking LED: the FPGA version of Hello World
  */
 
-import Chisel._
+import chisel3._
 import chisel3.Driver
 
 /**
@@ -16,13 +16,13 @@ import chisel3.Driver
  */
 
 class Hello extends Module {
-  val io = new Bundle {
-    val led = UInt(OUTPUT, 1)
-  }
+  val io = IO(new Bundle {
+    val led = Output(UInt(1.W))
+  })
   val CNT_MAX = UInt(50000000 / 2 - 1);
   
-  val cntReg = Reg(init = UInt(0, 32))
-  val blkReg = Reg(init = UInt(0, 1))
+  val cntReg = RegInit(UInt(0, 32.W))
+  val blkReg = RegInit(UInt(0, 1.W))
 
   cntReg := cntReg + 1.U
   when(cntReg === CNT_MAX) {
