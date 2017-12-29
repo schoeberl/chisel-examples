@@ -19,10 +19,10 @@ class Hello extends Module {
   val io = IO(new Bundle {
     val led = Output(UInt(1.W))
   })
-  val CNT_MAX = UInt(50000000 / 2 - 1);
+  val CNT_MAX = (50000000 / 2 - 1).U;
   
-  val cntReg = RegInit(UInt(0, 32.W))
-  val blkReg = RegInit(UInt(0, 1.W))
+  val cntReg = RegInit(0.asUInt(32.W))
+  val blkReg = RegInit(0.asUInt(1.W))
 
   cntReg := cntReg + 1.U
   when(cntReg === CNT_MAX) {
@@ -33,12 +33,10 @@ class Hello extends Module {
 }
 
 /**
- * An object containing a main() to invoke chiselMain()
- * to generate the Verilog code.
+ * An object containing a main() to generate the Verilog code.
  */
 object Hello {
   def main(args: Array[String]): Unit = {
-    // chiselMain(Array("--backend", "v"), () => Module(new Hello()))
     chisel3.Driver.execute(Array[String](), () => new Hello())
   }
 }
