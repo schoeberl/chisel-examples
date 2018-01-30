@@ -86,7 +86,7 @@ class Rx(frequency: Int, baudRate: Int) extends Module {
   // Sync in the asynchronous RX data
   val rxReg = Reg(next = Reg(next = io.rxd))
 
-  val shiftReg = Reg(init = Bits(0, 8))
+  val shiftReg = Reg(init = Bits('A', 8))
   val cntReg = Reg(init = UInt(0, 20))
   val bitsReg = Reg(init = UInt(0, 4))
   val valReg = Reg(init = Bool(false))
@@ -185,11 +185,19 @@ class Sender(frequency: Int, baudRate: Int) extends Module {
   }
 }
 
-object SenderMain {
-  def main(args: Array[String]): Unit = {
-    chiselMain(Array[String]("--backend", "v", "--targetDir", "generated"),
-      () => Module(new Sender(50000000, 115200)))
+class Echo(frequency: Int, baudRate: Int) extends Module {
+  val io = new Bundle {
+    val txd = Bits(OUTPUT, 1)
+    val rxd = Bits(INPUT, 1)
   }
+  // io.txd := Reg(next = io.rxd, init = UInt(0))
+  val tx = Module(new BufferedTx(frequency, baudRate))
+  val rx = Module(new Rx(frequency, baudRate))
+  io.txd := tx.io.txd
+  rx.io.rxd := io.rxd
+  tx.io.channel <> rx.io.channel
+  tx.io.channel.valid := Bool(true)
+//  tx.io.channel.data := Bits('H')
 }
 
 class UartMain(frequency: Int, baudRate: Int) extends Module {
@@ -198,8 +206,10 @@ class UartMain(frequency: Int, baudRate: Int) extends Module {
     val txd = Bits(OUTPUT, 1)
   }
   
-  val u = Module(new Sender(50000000, 115200))
+  // val u = Module(new Sender(50000000, 115200))
+  val u = Module(new Echo(50000000, 115200))
   io.txd := u.io.txd
+  u.io.rxd := io.rxd
 }
 
 object UartMain {
@@ -209,19 +219,3 @@ object UartMain {
   }
 }
 
-// TODO: use receiver and transmitter
-class Echo extends Module {
-  val io = new Bundle {
-    val txd = Bits(OUTPUT, 1)
-    val rxd = Bits(INPUT, 1)
-  }
-
-  io.txd := io.rxd
-}
-
-object EchoMain {
-  def main(args: Array[String]): Unit = {
-    chiselMain(Array("--backend", "v", "--targetDir", "generated"),
-      () => Module(new Echo()))
-  }
-}

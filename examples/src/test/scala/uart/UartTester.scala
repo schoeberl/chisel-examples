@@ -82,3 +82,31 @@ object SenderTester {
       }
   }
 }
+
+class RxTester(dut: Rx) extends Tester(dut) {
+
+  poke(dut.io.rxd, 1)
+  step(10)
+  poke(dut.io.rxd, 0)
+  step(10)
+  poke(dut.io.rxd, 1)
+  step(30)
+  poke(dut.io.channel.ready, 1)
+  step(1)
+  poke(dut.io.channel.ready, 0)
+  step(4)
+  poke(dut.io.rxd, 0)
+  step(10)
+  poke(dut.io.rxd, 1)
+  step(30)
+}
+
+object RxTester {
+  def main(args: Array[String]): Unit = {
+    chiselMainTest(Array[String]("--backend", "c", "--compile", "--test",
+      "--genHarness", "--vcd", "--targetDir", "generated"),
+      () => Module(new Rx(10000, 3000))) {
+        c => new RxTester(c)
+      }
+  }
+}
