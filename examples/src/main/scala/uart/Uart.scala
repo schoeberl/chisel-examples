@@ -1,5 +1,5 @@
 /*
- * Copyright: 2014-2017, Technical University of Denmark, DTU Compute
+ * Copyright: 2014-2018, Technical University of Denmark, DTU Compute
  * Author: Martin Schoeberl (martin@jopdesign.com)
  * License: Simplified BSD License
  * 
@@ -33,7 +33,7 @@ class Tx(frequency: Int, baudRate: Int) extends Module {
 
   val BIT_CNT = UInt((frequency + baudRate / 2) / baudRate - 1)
 
-  val shiftReg = Reg(init = Bits(0x3f))
+  val shiftReg = Reg(init = Bits(0x7ff))
   val cntReg = Reg(init = UInt(0, 20))
   val bitsReg = Reg(init = UInt(0, 4))
 
@@ -55,7 +55,7 @@ class Tx(frequency: Int, baudRate: Int) extends Module {
         shiftReg(10, 9) := Bits(3) // two stop bits
         bitsReg := UInt(11)
       }.otherwise {
-        shiftReg := Bits(0x3f)
+        shiftReg := Bits(0x7ff)
       }
     }
 
@@ -206,10 +206,10 @@ class UartMain(frequency: Int, baudRate: Int) extends Module {
     val txd = Bits(OUTPUT, 1)
   }
   
-  // val u = Module(new Sender(50000000, 115200))
-  val u = Module(new Echo(50000000, 115200))
+  val u = Module(new Sender(50000000, 115200))
+  // val u = Module(new Echo(50000000, 115200))
   io.txd := u.io.txd
-  u.io.rxd := io.rxd
+  // u.io.rxd := io.rxd
 }
 
 object UartMain {
