@@ -11,8 +11,9 @@ more advanced and needs additional steps.
 ## Preparation Work
 
  * Move to the latest version of Chisel2 (2.2.38) and check that everything works as expected
- * Fork Chisel2 and have the source of the latest version in Eclipse (but did not really work, so delayed this exercise until Chisel 3)
- * Start to use some actual features, such as nicer constant syntax
+ * Start to use some actual features, such as:
+   * Input/Output is already available, but not UInt(8.W), so use UInt(width = 8) for now
+   * nicer constants are available, such as 0.U
  * Install verilator, if not yet done
 
 ## The Switch

@@ -5,6 +5,9 @@ The shall be a collection of code examples for [Chisel](https://chisel.eecs.berk
 This collection will be moved to the latest version of Chisel, Chisel 3.
 I will collect notes in [TowardsChisel3](TowardsChisel3.md)
 
+The blinking LED (in hello-world) has been ported to Chisel 3.
+The other examples are still in Chisel 2.
+
 # Getting the Examples
 
     $ git clone https://github.com/schoeberl/chisel-examples.git
