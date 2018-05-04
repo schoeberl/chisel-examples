@@ -1,26 +1,15 @@
-# Chisel Examples
 
-The shall be a collection of code examples for [Chisel](https://chisel.eecs.berkeley.edu/).
+This is a collection of small Chisel example circuits.
 
-This collection will be moved to the latest version of Chisel, Chisel 3.
-I will collect notes in [TowardsChisel3](TowardsChisel3.md)
+Author: Martin Schoeberl (martin@jopdesign.com)
 
-The blinking LED (in hello-world) has been ported to Chisel 3.
-The other examples are still in Chisel 2.
+HOWTO:
 
-# Getting the Examples
+make alu
+	Generates the Verilog files for the small ALU.
+	Synthesize it for the DE0 board with Quartus and the alu project file.
 
-    $ git clone https://github.com/schoeberl/chisel-examples.git
+make test-alu
+	Generats the C++ based simulation and runs the tests.
 
-The collection is organized as follows:
-
-**hello-world** is a fully self contained minimal project for a blinking LED in an FPGA.
-
-**examples** is a collection of small Chisel projects.
-
-
-# Needed Tools
-
- * A recent version of Java
-
- * The Scala build tool [sbt](http://www.scala-sbt.org/)
+See the Makefile for further examples, or simply run `sbt run` to see all objects with a main.
