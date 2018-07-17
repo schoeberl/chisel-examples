@@ -44,11 +44,51 @@ object HelloWorld extends App {
 ```
 import chisel3.Driver
 ```
- * No generating hardware. Next surprise when trying to synthesize: the
+ * Now generating hardware. Next surprise when trying to synthesize: the
 name of the clock net was changed from `clk` to `clock`. No big deal.
  * Synthesize, configure the FPGA, and the LED blinks in Chisel 3
+ * Change to chisel3 package
 
 To be continued with:
- * Change to chisel3 package
  * The other examples, which also include testers
+
+## Compatibility Issues
+
+Use latest Chisel 2 version (2.2.38)
+
+following works
+```
+  val io = IO(new Bundle {
+    val dout = Output(UInt(width = 32))
+  })
+```
+following not, as 32.W does not work
+```
+  val io = IO(new Bundle {
+    val dout = Output(UInt(32.W))
+  })
+```
+
+Use Chisel 3 in compatibility mode (import Chisel._)
+
+following does not work (issue with Output)
+```
+  val io = IO(new Bundle {
+    val dout = Output(UInt(width = 32))
+  })
+```
+
+following does not work (issue with Output)
+```
+  val io = IO(new Bundle {
+    val dout = Output(UInt(32.W))
+  })
+```
+
+following works with chisel3._
+```
+  val io = IO(new Bundle {
+    val dout = Output(UInt(32.W))
+  })
+```
 
