@@ -56,6 +56,16 @@ To be continued with:
 
 Use latest Chisel 2 version (2.2.38)
 
+according to Jim following should be kept in Chisel 2 and works with the Chisel 3 compatibility layer:
+
+```
+val dout = UInt(OUTPUT, 32)
+```
+
+then the change can be made on a file by file base.
+
+The below is not the way to transition form Chisel 2 to 3!
+
 following works
 ```
   val io = IO(new Bundle {
