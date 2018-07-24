@@ -35,3 +35,28 @@ make alu-test
 	Generats the C++ based simulation and runs the tests.
 
 See the Makefile for further examples, or simply run `sbt run` to see all objects with a main.
+
+## Notes using the DE10-Nano
+
+Change switches for FPGA configuration to:
+
+```
++------+
+|* ** *|
+| *  * |
++------+
+```
+
+Probably add USB blaster permissions for: Bus 001 Device 005: ID 09fb:6810 Altera and 09fb:6010
+
+A TTL UART is connected to GPIO pins 1 and 2 of GPIO 0.
+
+GND * *
+    * *
+    * *
+    * *
+    * *
+txd * * rxd (pin 1)
+
+rxd and txd are from the FPGA view, therefore TTL UART rxd needs to
+be connected to txd (pin 2) and the other way around.

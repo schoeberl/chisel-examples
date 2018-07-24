@@ -11,6 +11,7 @@ entity uart_top is
 port (
     clk : in std_logic;
 --    reset : in std_logic;
+-- led : out std_logic;
     rxd : in std_logic;
     txd : out std_logic
 );
@@ -37,7 +38,6 @@ end component;
 begin
    --
    --      internal reset generation
-   --      should include the PLL lock signal
    --
    process(clk)
    begin
@@ -55,6 +55,7 @@ begin
 
     u: UartMain port map(clk, reset, rxd, txd);
 
+--    led <= not rxd;
 --    txd <= rxd;
 
 end rtl;
