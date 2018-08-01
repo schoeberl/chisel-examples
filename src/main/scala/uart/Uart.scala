@@ -43,7 +43,7 @@ class Tx(frequency: Int, baudRate: Int) extends Module {
   // TODO: make the counter a tick generator
   when(cntReg === UInt(0)) {
 
-    cntReg := UInt(BIT_CNT)
+    cntReg := BIT_CNT
     when(bitsReg =/= UInt(0)) {
       val shift = shiftReg >> 1
       shiftReg := Cat(Bits(1), shift(9, 0))

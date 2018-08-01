@@ -14,13 +14,13 @@ import Chisel._
 class GenericWriterIO[T <: Data](gen: T) extends Bundle {
   val write = Input(Bool())
   val full = Output(Bool())
-  val din = Input(gen.clone)
+  val din = Input(gen.cloneType)
 }
 
 class GenericReaderIO[T <: Data](gen: T) extends Bundle {
   val read = Input(Bool())
   val empty = Output(Bool())
-  val dout = Output(gen.clone)
+  val dout = Output(gen.cloneType)
 }
 
 /**

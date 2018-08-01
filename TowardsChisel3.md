@@ -64,41 +64,15 @@ val dout = UInt(OUTPUT, 32)
 
 then the change can be made on a file by file base.
 
-The below is not the way to transition form Chisel 2 to 3!
+The below is not the way to transition form Chisel 2 to 3.
 
-following works
-```
-  val io = IO(new Bundle {
-    val dout = Output(UInt(width = 32))
-  })
-```
-following not, as 32.W does not work
-```
-  val io = IO(new Bundle {
-    val dout = Output(UInt(32.W))
-  })
-```
+Input and Output are added the Chisel 3.1.2 compatibility package,
+so one can move to Input/Output/IO in Chisel 2 and switch.
 
-Use Chisel 3 in compatibility mode (import Chisel._)
+One issues in the examples:
 
-following does not work (issue with Output)
-```
-  val io = IO(new Bundle {
-    val dout = Output(UInt(width = 32))
-  })
-```
 
-following does not work (issue with Output)
 ```
-  val io = IO(new Bundle {
-    val dout = Output(UInt(32.W))
-  })
-```
-
-following works with chisel3._
-```
-  val io = IO(new Bundle {
-    val dout = Output(UInt(32.W))
-  })
+Input(gen.clone)
 ```
 
