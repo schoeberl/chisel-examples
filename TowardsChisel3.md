@@ -64,15 +64,15 @@ val dout = UInt(OUTPUT, 32)
 
 then the change can be made on a file by file base.
 
-The below is not the way to transition form Chisel 2 to 3.
-
 Input and Output are added the Chisel 3.1.2 compatibility package,
 so one can move to Input/Output/IO in Chisel 2 and switch.
 
 One issues in the examples:
 
-
 ```
 Input(gen.clone)
 ```
+Solution: use ```cloneType```
 
+Probably we can drop most clone() methods in the OCP code on Patmos?
+Need to check how this works now and what e.g., a Vec uses (clone() or cloneType())?
