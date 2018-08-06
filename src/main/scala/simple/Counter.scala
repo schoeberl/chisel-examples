@@ -9,18 +9,18 @@
 
 package simple
 
-import Chisel._
+import chisel3._
 
 /**
  * A simple, configurable counter that wraps around.
  */
 class Counter(size: Int) extends Module {
-  val io = new Bundle {
-    val out = UInt(OUTPUT, size)
-  }
+  val io = IO(new Bundle {
+    val out = Output(UInt(size.W))
+  })
 
-  val r1 = Reg(init = UInt(0, size))
-  r1 := r1 + UInt(1)
+  val r1 = RegInit(0.asUInt(size.W))
+  r1 := r1 + 1.U
 
   io.out := r1
 }

@@ -24,7 +24,7 @@ uart:
 alu-test:
 	$(SBT) "test:runMain simple.AluTester"
 
-counter:
+counter-test:
 	$(SBT) "test:runMain simple.CounterTester"
 
 knight-test:

@@ -40,7 +40,7 @@ class Alu extends Module {
     is(3.U) { result := a & b }
   }
 
-  // Output on the LEDs (with zero extension)
+  // Output on the LEDs
   io.result := result
 }
 

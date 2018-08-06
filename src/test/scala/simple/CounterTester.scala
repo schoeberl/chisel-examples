@@ -18,8 +18,7 @@ import chisel3.iotesters.PeekPokeTester
 class CounterTester(c: Counter) extends PeekPokeTester(c) {
 
   for (i <- 0 until 5) {
-    println(i.toString)
-    println(peek(c.io.out).toString())
+    println(i.toString + ": " + peek(c.io.out).toString())
     step(1)
   }
 }
@@ -29,7 +28,7 @@ class CounterTester(c: Counter) extends PeekPokeTester(c) {
  */
 object CounterTester extends App {
 
-  iotesters.Driver.execute(Array[String](), () => new Counter(4)) {
+  iotesters.Driver.execute(Array[String](), () => new Counter(2)) {
     c => new CounterTester(c)
   }
 }
