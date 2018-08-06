@@ -9,13 +9,13 @@
 
 package simple
 
-import Chisel._
-
+import chisel3._
+import chisel3.iotesters.PeekPokeTester
 
 /**
  * Test the Alu design
  */
-class AluTester(dut: Alu) extends Tester(dut) {
+class AluTester(dut: Alu) extends PeekPokeTester(dut) {
 
   // This is exhaustive testing, which usually is not possible
   for (a <- 0 to 15) {
@@ -40,13 +40,9 @@ class AluTester(dut: Alu) extends Tester(dut) {
   }
 }
 
-object AluTester {
-  def main(args: Array[String]): Unit = {
-    println("Testing the ALU")
-    chiselMainTest(Array("--genHarness", "--test", "--backend", "c",
-      "--compile", "--targetDir", "generated"),
-      () => Module(new Alu())) {
-        f => new AluTester(f)
-      }
+object AluTester extends App {
+  println("Testing the ALU")
+  iotesters.Driver.execute(Array[String](), () => new Alu()) {
+    c => new AluTester(c)
   }
 }

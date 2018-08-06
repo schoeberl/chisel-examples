@@ -9,9 +9,10 @@
 
 package uart
 
-import Chisel._
+import chisel3._
+import chisel3.iotesters.PeekPokeTester
 
-class TxTester(dut: Tx) extends Tester(dut) {
+class TxTester(dut: Tx) extends PeekPokeTester(dut) {
 
   step(2)
   poke(dut.io.channel.valid, 1)
@@ -28,17 +29,13 @@ class TxTester(dut: Tx) extends Tester(dut) {
   step(30)
 }
 
-object TxTester {
-  def main(args: Array[String]): Unit = {
-    chiselMainTest(Array[String]("--backend", "c", "--compile", "--test",
-      "--genHarness", "--vcd", "--targetDir", "generated"),
-      () => Module(new Tx(10000, 3000))) {
-        c => new TxTester(c)
-      }
+object TxTester extends App {
+  iotesters.Driver.execute(Array("--fint-write-vcd"), () => new Tx(10000, 3000)) {
+    c => new TxTester(c)
   }
 }
 
-class BufferedTxTester(dut: BufferedTx) extends Tester(dut) {
+class BufferedTxTester(dut: BufferedTx) extends PeekPokeTester(dut) {
 
   step(2)
   poke(dut.io.channel.valid, 1)
@@ -56,34 +53,26 @@ class BufferedTxTester(dut: BufferedTx) extends Tester(dut) {
   step(30)
 }
 
-object BufferedTxTester {
-  def main(args: Array[String]): Unit = {
-    chiselMainTest(Array[String]("--backend", "c", "--compile", "--test",
-      "--genHarness", "--vcd", "--targetDir", "generated"),
-      () => Module(new BufferedTx(10000, 3000))) {
-        c => new BufferedTxTester(c)
-      }
+object BufferedTxTester extends App {
+  iotesters.Driver.execute(Array("--fint-write-vcd"), () => new BufferedTx(10000, 3000)) {
+    c => new BufferedTxTester(c)
   }
 }
 
-class SenderTester(dut: Sender) extends Tester(dut) {
+class SenderTester(dut: Sender) extends PeekPokeTester(dut) {
 
   step(300)
 }
 
 
 
-object SenderTester {
-  def main(args: Array[String]): Unit = {
-    chiselMainTest(Array[String]("--backend", "v", "--compile", "--test",
-      "--genHarness", "--vcd", "--targetDir", "generated"),
-      () => Module(new Sender(10000, 3000))) {
-        c => new SenderTester(c)
-      }
+object SenderTester extends App {
+  iotesters.Driver.execute(Array("--fint-write-vcd"), () => new Sender(10000, 3000)) {
+    c => new SenderTester(c)
   }
 }
 
-class RxTester(dut: Rx) extends Tester(dut) {
+class RxTester(dut: Rx) extends PeekPokeTester(dut) {
 
   poke(dut.io.rxd, 1)
   step(10)
@@ -101,12 +90,8 @@ class RxTester(dut: Rx) extends Tester(dut) {
   step(30)
 }
 
-object RxTester {
-  def main(args: Array[String]): Unit = {
-    chiselMainTest(Array[String]("--backend", "c", "--compile", "--test",
-      "--genHarness", "--vcd", "--targetDir", "generated"),
-      () => Module(new Rx(10000, 3000))) {
-        c => new RxTester(c)
-      }
+object RxTester extends App {
+  iotesters.Driver.execute(Array("--fint-write-vcd"), () => new Rx(10000, 3000)) {
+    c => new RxTester(c)
   }
 }

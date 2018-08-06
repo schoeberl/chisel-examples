@@ -15,15 +15,16 @@
 
 package simple
 
-import Chisel._
+import chisel3._
+import chisel3.iotesters.PeekPokeTester
 
 /**
  * A simple tester that just runs some ticks
  */
-class KnightTester(dut: KnightRider) extends Tester(dut) {
+class KnightTester(dut: KnightRider) extends PeekPokeTester(dut) {
 
   for (i <- 0 until 30) {
-    println(peek(dut.io.led))
+    println(peek(dut.io.led).toString())
     step(1)
   }
 }
@@ -31,12 +32,8 @@ class KnightTester(dut: KnightRider) extends Tester(dut) {
 /**
  * Run the tests at a lower frequency.
  */
-object KnightTester {
-  def main(args: Array[String]): Unit = {
-    chiselMainTest(Array("--genHarness", "--test", "--backend", "c",
-      "--compile", "--targetDir", "generated"),
-      () => Module(new KnightRider(null, 12))) {
-        c => new KnightTester(c)
-      }
+object KnightTester extends App {
+  iotesters.Driver.execute(Array[String](), () => new KnightRider(null, 12)) {
+    c => new KnightTester(c)
   }
 }

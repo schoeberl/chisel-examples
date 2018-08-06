@@ -9,16 +9,17 @@
 
 package simple
 
-import Chisel._
+import chisel3._
+import chisel3.iotesters.PeekPokeTester
 
 /**
  * Test the counter by printing out the value at each clock cycle.
  */
-class CounterTester(c: Counter) extends Tester(c) {
+class CounterTester(c: Counter) extends PeekPokeTester(c) {
 
   for (i <- 0 until 5) {
-    println(i)
-    println(peek(c.io.out))
+    println(i.toString)
+    println(peek(c.io.out).toString())
     step(1)
   }
 }
@@ -26,12 +27,9 @@ class CounterTester(c: Counter) extends Tester(c) {
 /**
  * Create a counter and a tester.
  */
-object CounterTester {
-  def main(args: Array[String]): Unit = {
-    chiselMainTest(Array("--genHarness", "--test", "--backend", "c",
-      "--compile", "--targetDir", "generated"),
-      () => Module(new Counter(4))) {
-        c => new CounterTester(c)
-      }
+object CounterTester extends App {
+
+  iotesters.Driver.execute(Array[String](), () => new Counter(4)) {
+    c => new CounterTester(c)
   }
 }

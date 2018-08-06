@@ -9,12 +9,13 @@
 
 package advanced
 
-import Chisel._
+import chisel3._
+import chisel3.iotesters.PeekPokeTester
 
 /**
  * Test the design.
  */
-class GenericFifoTester(dut: GenericBubbleFifo[UInt]) extends Tester(dut) {
+class GenericFifoTester(dut: GenericBubbleFifo[UInt]) extends PeekPokeTester(dut) {
 
   // some defaults for all signals
   poke(dut.io.enq.din, 0xab)
@@ -90,9 +91,7 @@ class GenericFifoTester(dut: GenericBubbleFifo[UInt]) extends Tester(dut) {
 }
 
 object GenericFifoTester extends App {
-  chiselMainTest(Array("--genHarness", "--test",
-    "--compile", "--vcd", "--targetDir", "generated"),
-    () => Module(new GenericBubbleFifo(UInt(width = 8), 4))) {
-    f => new GenericFifoTester(f)
+  iotesters.Driver.execute(Array("--fint-write-vcd"), () => new GenericBubbleFifo(UInt(8.W), 4)) {
+    c => new GenericFifoTester(c)
   }
 }

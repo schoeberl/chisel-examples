@@ -9,12 +9,13 @@
 
 package simple
 
-import Chisel._
+import chisel3._
+import chisel3.iotesters.PeekPokeTester
 
 /**
  * Test the design.
  */
-class FifoTester(dut: BubbleFifo) extends Tester(dut) {
+class FifoTester(dut: BubbleFifo) extends PeekPokeTester(dut) {
 
   // some defaults for all signals
   poke(dut.io.enq.din, 0xab)
@@ -89,12 +90,8 @@ class FifoTester(dut: BubbleFifo) extends Tester(dut) {
 
 }
 
-object FifoTester {
-  def main(args: Array[String]): Unit = {
-    chiselMainTest(Array("--genHarness", "--test", "--backend", "c",
-      "--compile", "--vcd", "--targetDir", "generated"),
-      () => Module(new BubbleFifo(8, 4))) {
-        f => new FifoTester(f)
-      }
+object FifoTester extends App {
+  iotesters.Driver.execute(Array("--fint-write-vcd"), () => new BubbleFifo(8, 4)) {
+    c => new FifoTester(c)
   }
 }

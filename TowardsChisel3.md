@@ -11,6 +11,8 @@ more advanced and needs additional steps.
 ## Preparation Work
 
  * Move to the latest version of Chisel2 (2.2.38) and check that everything works as expected
+ * Mandatory changes:
+   * Use ```Wire()```
  * Start to use some actual features, such as:
    * Input/Output is already available, but not UInt(8.W), so use UInt(width = 8) for now
    * nicer constants are available, such as 0.U
@@ -33,6 +35,11 @@ resolvers ++= Seq(
 libraryDependencies += "edu.berkeley.cs" %% "chisel3" % "3.0-SNAPSHOT"
 ```
 
+or better:
+```
+libraryDependencies += "edu.berkeley.cs" %% "chisel3" % "3.1.2"
+```
+
  * first surprise: no more `chiselMain()`
  * Found the way to generate Verilog in the FAQ
 ```
@@ -52,6 +59,11 @@ name of the clock net was changed from `clk` to `clock`. No big deal.
 To be continued with:
  * The other examples, which also include testers
 
+## Testing
+
+Chisel testing has been moved to its own library and needs to be included
+in the build.sbt.
+
 ## Compatibility Issues
 
 Use latest Chisel 2 version (2.2.38)
@@ -66,6 +78,9 @@ then the change can be made on a file by file base.
 
 Input and Output are added the Chisel 3.1.2 compatibility package,
 so one can move to Input/Output/IO in Chisel 2 and switch.
+
+Wires need to be wrapped into a ```Wire()```, even in the compatibility
+mode. But this can also be done in 2.2.38.
 
 One issues in the examples:
 
