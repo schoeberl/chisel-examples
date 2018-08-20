@@ -9,7 +9,8 @@
 
 package simple
 
-import Chisel._
+import chisel3._
+import chisel3.util._
 
 /*
  * On signal naming:
@@ -26,29 +27,29 @@ import Chisel._
  */
 
 class WriterIO(size: Int) extends Bundle {
-  val write = Bool(INPUT)
-  val full = Bool(OUTPUT)
-  val din = UInt(INPUT, size)
+  val write = Input(Bool())
+  val full = Output(Bool())
+  val din = Input(UInt(size.W))
 }
 
 class ReaderIO(size: Int) extends Bundle {
-  val read = Bool(INPUT)
-  val empty = Bool(OUTPUT)
-  val dout = UInt(OUTPUT, size)
+  val read = Input(Bool())
+  val empty = Output(Bool())
+  val dout = Output(UInt(size.W))
 }
 
 /**
  * A single register (=stage) to build the FIFO.
  */
 class FifoRegister(size: Int) extends Module {
-  val io = new Bundle {
+  val io = IO(new Bundle {
     val enq = new WriterIO(size)
     val deq = new ReaderIO(size)
-  }
+  })
 
-  val empty :: full :: Nil = Enum(UInt(), 2)
-  val stateReg = Reg(init = empty)
-  val dataReg = Reg(init = Bits(0, size))
+  val empty :: full :: Nil = Enum(2)
+  val stateReg = RegInit(empty)
+  val dataReg = RegInit(0.U(size.W))
 
   when(stateReg === empty) {
     when(io.enq.write) {
@@ -58,7 +59,7 @@ class FifoRegister(size: Int) extends Module {
   }.elsewhen(stateReg === full) {
     when(io.deq.read) {
       stateReg := empty
-      dataReg := Bits(0) // just to better see empty slots in the waveform
+      dataReg := 0.U // just to better see empty slots in the waveform
     }
   }.otherwise {
     // There should not be an otherwise state
@@ -72,12 +73,11 @@ class FifoRegister(size: Int) extends Module {
  * This is a bubble FIFO.
  */
 class BubbleFifo(size: Int, depth: Int) extends Module {
-  val io = new Bundle {
+  val io = IO(new Bundle {
     val enq = new WriterIO(size)
     val deq = new ReaderIO(size)
-  }
+  })
 
-  val stage = Module(new FifoRegister(size))
   val buffers = Array.fill(depth) { Module(new FifoRegister(size)) }
   for (i <- 0 until depth - 1) {
     buffers(i + 1).io.enq.din := buffers(i).io.deq.dout

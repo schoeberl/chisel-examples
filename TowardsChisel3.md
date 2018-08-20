@@ -82,6 +82,8 @@ so one can move to Input/Output/IO in Chisel 2 and switch.
 Wires need to be wrapped into a ```Wire()```, even in the compatibility
 mode. But this can also be done in 2.2.38.
 
+## Further Changes for Chisel 3
+
 One issues in the examples:
 
 ```
@@ -91,3 +93,7 @@ Solution: use ```cloneType```
 
 Probably we can drop most clone() methods in the OCP code on Patmos?
 Need to check how this works now and what e.g., a Vec uses (clone() or cloneType())?
+
+switch needs an import of ```import chisel3.util._```
+
+```Enum(UInt(), 2)``` becomes ```Enum(2)``` and needs to import ```util``` as well.

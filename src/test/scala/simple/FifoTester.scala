@@ -91,7 +91,8 @@ class FifoTester(dut: BubbleFifo) extends PeekPokeTester(dut) {
 }
 
 object FifoTester extends App {
-  iotesters.Driver.execute(Array("--fint-write-vcd"), () => new BubbleFifo(8, 4)) {
+  iotesters.Driver.execute(Array("--target-dir", "generated", "--fint-write-vcd"), () => new BubbleFifo(8, 4)) {
+  // iotesters.Driver.execute(Array("--target-dir", "generated", "--fint-write-vcd", "--wave-form-file-name", "generated/BubbleFifo.vcd"), () => new BubbleFifo(8, 4)) {
     c => new FifoTester(c)
   }
 }

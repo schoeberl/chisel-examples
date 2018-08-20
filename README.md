@@ -51,12 +51,14 @@ Probably add USB blaster permissions for: Bus 001 Device 005: ID 09fb:6810 Alter
 
 A TTL UART is connected to GPIO pins 1 and 2 of GPIO 0.
 
+```
 GND * *
     * *
     * *
     * *
     * *
 txd * * rxd (pin 1)
+```
 
 rxd and txd are from the FPGA view, therefore TTL UART rxd needs to
 be connected to txd (pin 2) and the other way around.

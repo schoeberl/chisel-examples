@@ -19,7 +19,7 @@ class Counter(size: Int) extends Module {
     val out = Output(UInt(size.W))
   })
 
-  val r1 = RegInit(0.asUInt(size.W))
+  val r1 = RegInit(0.U(size.W))
   r1 := r1 + 1.U
 
   io.out := r1
