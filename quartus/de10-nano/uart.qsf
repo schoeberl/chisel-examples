@@ -22,7 +22,7 @@ set_global_assignment -name MIN_CORE_JUNCTION_TEMP "-40"
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 100
 
 
-set_location_assignment PIN_V11 -to clk
+set_location_assignment PIN_V11 -to clock
 set_location_assignment PIN_W15 -to led
 
 # GPIO 0, pins 1 and 2

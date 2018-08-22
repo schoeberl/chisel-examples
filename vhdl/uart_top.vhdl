@@ -9,7 +9,7 @@ use ieee.numeric_std.all;
 entity uart_top is
 
 port (
-    clk : in std_logic;
+    clock : in std_logic;
 --    reset : in std_logic;
 -- led : out std_logic;
     rxd : in std_logic;
@@ -20,7 +20,7 @@ end uart_top;
 architecture rtl of uart_top is
 
 component UartMain is
-port (clk : std_logic;
+port (clock : std_logic;
       reset : in std_logic;
       io_rxd : in std_logic;
       io_txd : out std_logic);
@@ -39,9 +39,9 @@ begin
    --
    --      internal reset generation
    --
-   process(clk)
+   process(clock)
    begin
-      if rising_edge(clk) then
+      if rising_edge(clock) then
          if (res_cnt /= "111") then
             res_cnt <= res_cnt + 1;
          end if;
@@ -53,7 +53,7 @@ begin
 
    reset <= int_res;
 
-    u: UartMain port map(clk, reset, rxd, txd);
+    u: UartMain port map(clock, reset, rxd, txd);
 
 --    led <= not rxd;
 --    txd <= rxd;

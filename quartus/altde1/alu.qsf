@@ -31,7 +31,7 @@ set_global_assignment -name CRC_ERROR_OPEN_DRAIN OFF
 set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "3.3-V LVCMOS"
 set_global_assignment -name RESERVE_ALL_UNUSED_PINS "AS INPUT TRI-STATED WITH WEAK PULL-UP"
 
-set_location_assignment PIN_L1 -to clk
+set_location_assignment PIN_L1 -to clock
 
 set_location_assignment PIN_L22 -to io_sw[0]
 set_location_assignment PIN_L21 -to io_sw[1]

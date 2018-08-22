@@ -62,7 +62,7 @@ set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -fall
 set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -rise
 set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -fall
 
-set_location_assignment PIN_G21 -to clk
+set_location_assignment PIN_G21 -to clock
 set_location_assignment PIN_B1 -to io_led[9]
 set_location_assignment PIN_B2 -to io_led[8]
 set_location_assignment PIN_C2 -to io_led[7]

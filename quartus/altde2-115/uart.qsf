@@ -37,7 +37,7 @@ set_global_assignment -name USE_CONFIGURATION_DEVICE OFF
 set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "3.3-V LVCMOS"
 
 
-set_location_assignment PIN_Y2 -to clk
+set_location_assignment PIN_Y2 -to clock
 
 set_location_assignment PIN_G19 -to io_led[0]
 set_location_assignment PIN_F19 -to io_led[1]

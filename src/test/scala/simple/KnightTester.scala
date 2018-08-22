@@ -1,15 +1,12 @@
 /*
- * Simple FSM example including slow frequency tick generation and
- * reset handling with a top level Chisel component.
- * 
+ * Tester for the FSM example Knight Rider.
+ * including slow frequency tick generation and
+
  * This code is part of the Chisel examples.
  * 
  * Copyright: 2015, Technical University of Denmark, DTU Compute
  * Author: Martin Schoeberl (martin@jopdesign.com)
  * License: Simplified BSD License
- * 
- * A simple finite state machine (FSM) that drives LEDs like
- * on the lights on the Knight Rider car.
  * 
  */
 
