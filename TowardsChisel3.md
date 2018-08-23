@@ -97,3 +97,5 @@ Need to check how this works now and what e.g., a Vec uses (clone() or cloneType
 switch needs an import of ```import chisel3.util._```
 
 ```Enum(UInt(), 2)``` becomes ```Enum(2)``` and needs to import ```util``` as well.
+
+```Cat``` is in ```utils``` as well. What should be used?
