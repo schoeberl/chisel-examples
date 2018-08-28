@@ -33,10 +33,8 @@ class Hello extends Module {
 }
 
 /**
- * An object containing a main() to generate the Verilog code.
+ * An object extending App to generate the Verilog code.
  */
-object Hello {
-  def main(args: Array[String]): Unit = {
-    chisel3.Driver.execute(Array[String](), () => new Hello())
-  }
+object Hello extends App {
+  chisel3.Driver.execute(Array[String](), () => new Hello())
 }
