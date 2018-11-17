@@ -64,6 +64,41 @@ To be continued with:
 Chisel testing has been moved to its own library and needs to be included
 in the build.sbt.
 
+```
+libraryDependencies += "edu.berkeley.cs" %% "chisel-iotesters" % "1.2.2"
+```
+and imported and used as follows:
+
+```
+import chisel3.iotesters.PeekPokeTester
+
+class LerosTester(dut: Leros) extends PeekPokeTester(dut) {
+...
+
+object LerosTester extends App {
+  iotesters.Driver.execute(Array("--target-dir", "generated", "--fint-write-vcd"), () => new Leros(32, 10, args(0))) {
+    c => new LerosTester(c)
+  }
+}
+```
+
+When using the compatibility layer, the ```iotester``` needs to be
+taken from ```chisel3.iotester```:
+
+```
+chisel3.iotesters.Driver.execute(Array("--target-dir", "generated")...
+```
+
+The DUT shall not be wrapped into a Module, so change:
+```
+() => Module(new Play(4))
+```
+to
+```
+() => new Play(4)
+```
+
+
 ## Compatibility Issues
 
 Use latest Chisel 2 version (2.2.38)
@@ -82,7 +117,7 @@ so one can move to Input/Output/IO in Chisel 2 and switch.
 Wires need to be wrapped into a ```Wire()```, even in the compatibility
 mode. But this can also be done in 2.2.38.
 
-## Further Changes for Chisel 3
+## Further Changes for Chisel 3 (Compatibility Issues)
 
 One issues in the examples:
 
@@ -91,11 +126,55 @@ Input(gen.clone)
 ```
 Solution: use ```cloneType```
 
+Bits is now a second class type, therefore it breaks some Chisel 2 code, e.g.,:
+
+```
+    val byteArray = source.map(_.toByte).toArray
+    source.close()
+    val arr = new Array[Bits](byteArray.length)
+    for (i <- 0 until byteArray.length) {
+      arr(i) = Bits(byteArray(i), 8)
+    }
+    val rom = Vec[Bits](arr)
+```
+
+Suggestion is: use UInt.
+
+This was legal Chisel 2 code, but broke in Chisel 3. It should be legal Chisel code:
+
+```
+  val shiftReg = Reg(init = UInt(0, 8))
+
+  shiftReg(0) := inVal
+
+  for (i <- 1 until 8) {
+    shiftReg(i) := shiftReg(i - 1)
+  }
+```
+
 Probably we can drop most clone() methods in the OCP code on Patmos?
 Need to check how this works now and what e.g., a Vec uses (clone() or cloneType())?
 
-switch needs an import of ```import chisel3.util._```
+```switch``` needs an import of ```import chisel3.util._```
 
 ```Enum(UInt(), 2)``` becomes ```Enum(2)``` and needs to import ```util``` as well.
 
-```Cat``` is in ```utils``` as well. What should be used?
+```Cat``` is in ```utils``` as well. What should be used instead?
+
+```Bundle``` is no abstract and following will fail:
+
+```
+class Base extends Module { val io = new Bundle() }
+```
+
+```println``` has changed as well and expects a String now. Following is broken:
+
+```
+    println(i)
+    println(peek(c.io.out))
+```
+Is ```toString``` the solution? Or are there other print functions now out?
+
+## Notes
+
+Bulk connections work different in Chisel 3 than in Chisel 2 (and the compatibility layer).
