@@ -2,11 +2,8 @@
 
 This repository is a collection of code examples for [Chisel](https://chisel.eecs.berkeley.edu/).
 
-This collection will be moved to the latest version of Chisel, Chisel 3.
-I will collect notes in [TowardsChisel3](TowardsChisel3.md)
-
-The blinking LED (in hello-world) has been ported to Chisel 3.
-The other examples are still in Chisel 2.
+This collection has been moved to the latest version of Chisel, Chisel 3.
+I have collected notes on this move in [TowardsChisel3](TowardsChisel3.md)
 
 # Getting the Examples
 
