@@ -56,8 +56,6 @@ name of the clock net was changed from `clk` to `clock`. No big deal.
  * Synthesize, configure the FPGA, and the LED blinks in Chisel 3
  * Change to chisel3 package
 
-To be continued with:
- * The other examples, which also include testers
 
 ## Testing
 
@@ -167,13 +165,21 @@ Need to check how this works now and what e.g., a Vec uses (clone() or cloneType
 class Base extends Module { val io = new Bundle() }
 ```
 
-```println``` has changed as well and expects a String now. Following is broken:
+`println` has changed as well and expects a String now. Following is broken:
 
 ```
     println(i)
     println(peek(c.io.out))
 ```
 Is ```toString``` the solution? Or are there other print functions now out?
+
+Change `getWidth()` to `getWidth`
+
+### ChiselError is gone
+
+ * Change `ChiselError.error("error msg")` to `throw new Error("error msg")`
+ * Change `ChiselError.info("info msg")` to `println("info msg")`
+
 
 ## Notes
 
