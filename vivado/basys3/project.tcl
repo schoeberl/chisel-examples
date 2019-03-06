@@ -38,7 +38,7 @@ set origin_dir [file normalize [file dirname [info script]]]
 puts ${origin_dir}
 
 # Set the project name
-set _xil_proj_name_ "Hello"
+set _xil_proj_name_ "Uart"
 
 # Use project name variable, if specified in the tcl shell
 if { [info exists ::user_project_name] } {
@@ -107,7 +107,7 @@ set proj_dir [get_property directory [current_project]]
 set obj [current_project]
 set_property -name "board_part" -value "digilentinc.com:basys3:part0:1.1" -objects $obj
 
-set_property -name "board_part_repo_paths" -value "/board_files" -objects $obj
+set_property -name "board_part_repo_paths" -value "../../hello-world/vivado/basys3/board_files" -objects $obj
 
 set_property -name "default_lib" -value "xil_defaultlib" -objects $obj
 set_property -name "dsa.accelerator_binary_content" -value "bitstream" -objects $obj
@@ -133,6 +133,7 @@ set_property -name "mem.enable_memory_map_generation" -value "1" -objects $obj
 set_property -name "sim.central_dir" -value "$proj_dir/${_xil_proj_name_}.ip_user_files" -objects $obj
 set_property -name "sim.ip.auto_export_scripts" -value "1" -objects $obj
 set_property -name "simulator_language" -value "Mixed" -objects $obj
+set_property -name "target_language" -value "VHDL" -objects $obj
 
 # Create 'sources_1' fileset (if not found)
 if {[string equal [get_filesets -quiet sources_1] ""]} {
@@ -143,8 +144,8 @@ if {[string equal [get_filesets -quiet sources_1] ""]} {
 # Set 'sources_1' fileset object
 set obj [get_filesets sources_1]
 set files [list \
- [file normalize "${origin_dir}/../../Hello.v"] \
- [file normalize "${origin_dir}/../../verilog/hello_top.v"] \
+ [file normalize "${origin_dir}/../../generated/UartMain.v"] \
+ [file normalize "${origin_dir}/../../vhdl/uart_top.vhdl"] \
 ]
 add_files -norecurse -fileset $obj $files
 
@@ -156,7 +157,7 @@ add_files -norecurse -fileset $obj $files
 
 # Set 'sources_1' fileset properties
 set obj [get_filesets sources_1]
-set_property -name "top" -value "hello_top" -objects $obj
+set_property -name "top" -value "uart_top" -objects $obj
 
 # Create 'constrs_1' fileset (if not found)
 if {[string equal [get_filesets -quiet constrs_1] ""]} {
@@ -192,7 +193,7 @@ set obj [get_filesets sim_1]
 
 # Set 'sim_1' fileset properties
 set obj [get_filesets sim_1]
-set_property -name "top" -value "hello_top" -objects $obj
+set_property -name "top" -value "uart_top" -objects $obj
 set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
 
 # Create 'synth_1' run (if not found)

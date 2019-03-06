@@ -4,9 +4,9 @@
 ## - rename the used ports (in each line, after get_ports) according to the top level signal names in the project
 
 ## Clock signal
-set_property PACKAGE_PIN W5 [get_ports clk]
-	set_property IOSTANDARD LVCMOS33 [get_ports clk]
-	create_clock -add -name sys_clk_pin -period 20.00 -waveform {0 5} [get_ports clk]
+set_property PACKAGE_PIN W5 [get_ports clock]
+	set_property IOSTANDARD LVCMOS33 [get_ports clock]
+	create_clock -add -name sys_clk_pin -period 20.00 -waveform {0 5} [get_ports clock]
 
 ## Switches
 #set_property PACKAGE_PIN V17 [get_ports {sw[0]}]
@@ -44,8 +44,8 @@ set_property PACKAGE_PIN W5 [get_ports clk]
 
 
 ## LEDs
-set_property PACKAGE_PIN U16 [get_ports {led}]
-	set_property IOSTANDARD LVCMOS33 [get_ports {led}]
+#set_property PACKAGE_PIN U16 [get_ports {led}]
+	#set_property IOSTANDARD LVCMOS33 [get_ports {led}]
 #set_property PACKAGE_PIN E19 [get_ports {io_led[1]}]
 	#set_property IOSTANDARD LVCMOS33 [get_ports {io_led[1]}]
 #set_property PACKAGE_PIN U19 [get_ports {io_led[2]}]
@@ -264,10 +264,10 @@ set_property PACKAGE_PIN U16 [get_ports {led}]
 
 
 ##USB-RS232 Interface
-#set_property PACKAGE_PIN B18 [get_ports RsRx]
-	#set_property IOSTANDARD LVCMOS33 [get_ports RsRx]
-#set_property PACKAGE_PIN A18 [get_ports RsTx]
-	#set_property IOSTANDARD LVCMOS33 [get_ports RsTx]
+set_property PACKAGE_PIN B18 [get_ports rxd]
+	set_property IOSTANDARD LVCMOS33 [get_ports rxd]
+set_property PACKAGE_PIN A18 [get_ports txd]
+	set_property IOSTANDARD LVCMOS33 [get_ports txd]
 
 
 ##USB HID (PS/2)
