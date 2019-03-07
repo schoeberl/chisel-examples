@@ -180,6 +180,19 @@ Change `getWidth()` to `getWidth`
  * Change `ChiselError.error("error msg")` to `throw new Error("error msg")`
  * Change `ChiselError.info("info msg")` to `println("info msg")`
 
+### No subword assignments
+
+Subword assignments is gone in Chisel 3.
+```
+      when(rdData(7) === Bits(0)) {
+        rdAddr(8, 4) := UInt(0x10)
+        rdAddr(3, 0) := rdData
+```
+
+Rewrite the code, see also 
+ * https://github.com/freechipsproject/chisel3/issues/244
+ * https://github.com/freechipsproject/chisel3/issues/878
+
 
 ## Notes
 
