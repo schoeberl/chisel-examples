@@ -38,4 +38,7 @@ fifo-view:
 
 fifo: fifo-test fifo-view
 
+# clean everything (including IntelliJ project settings)
 
+clean:
+	git clean -fd
