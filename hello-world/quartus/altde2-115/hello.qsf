@@ -1,34 +1,8 @@
-# -------------------------------------------------------------------------- #
-#
-# Copyright (C) 1991-2010 Altera Corporation
-# Your use of Altera Corporation's design tools, logic functions 
-# and other software and tools, and its AMPP partner logic 
-# functions, and any output files from any of the foregoing 
-# (including device programming or simulation files), and any 
-# associated documentation or information are expressly subject 
-# to the terms and conditions of the Altera Program License 
-# Subscription Agreement, Altera MegaCore Function License 
-# Agreement, or other applicable license agreement, including, 
-# without limitation, that your use is for the sole purpose of 
-# programming logic devices manufactured by Altera and sold by 
-# Altera or its authorized distributors.  Please refer to the 
-# applicable agreement for further details.
-#
-# -------------------------------------------------------------------------- #
-#
-# 2) Altera recommends that you do not modify this file. This
-#    file is updated automatically by the Quartus II software
-#    and any changes you make may be lost or overwritten.
-#
-# -------------------------------------------------------------------------- #
-
-
 
 set_global_assignment -name FAMILY "Cyclone IV E"
 set_global_assignment -name DEVICE EP4CE115F29C7
 
-set_global_assignment -name TOP_LEVEL_ENTITY hello_top
-set_global_assignment -name VERILOG_FILE ../../verilog/hello_top.v
+set_global_assignment -name TOP_LEVEL_ENTITY Hello
 set_global_assignment -name VERILOG_FILE ../../Hello.v
 
 set_global_assignment -name VERILOG_MACRO "SYNTHESIS=<None>"
@@ -40,9 +14,11 @@ set_global_assignment -name USE_CONFIGURATION_DEVICE OFF
 set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "3.3-V LVCMOS"
 
 
-set_location_assignment PIN_Y2 -to clk
-set_location_assignment PIN_E21 -to led
-set_instance_assignment -name IO_STANDARD "2.5 V" -to led
+set_location_assignment PIN_Y2 -to clock
+set_location_assignment PIN_E21 -to io_led
+set_instance_assignment -name IO_STANDARD "2.5 V" -to io_led
+# KEY[0]
+set_location_assignment PIN_G26 -to reset
 
 set_global_assignment -name LAST_QUARTUS_VERSION "16.1.0 Lite Edition"
 set_global_assignment -name RESERVE_ALL_UNUSED_PINS "AS INPUT TRI-STATED WITH WEAK PULL-UP"
