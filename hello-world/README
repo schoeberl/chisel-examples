@@ -10,7 +10,7 @@ Therefore, this is a try to cut it down to the minimum.
 
 The example project consists of:
 
-   Hello.scala            The source of the hardware description of a blinking LED
+   src/main/scala/Hello.scala The source of the hardware description of a blinking LED
    Makefile               drives the build process
    build.sbt              Configuration to download Chisel and for the Chisel project
    verilog/hello_top.v    is a top level file for the FPGA
