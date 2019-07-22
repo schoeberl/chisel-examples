@@ -17,8 +17,11 @@ set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "3.3-V LVCMOS"
 set_location_assignment PIN_Y2 -to clock
 set_location_assignment PIN_E21 -to io_led
 set_instance_assignment -name IO_STANDARD "2.5 V" -to io_led
-# KEY[0]
-set_location_assignment PIN_G26 -to reset
+# KEY[0] is low avtive
+# set_location_assignment PIN_M23 -to reset
+# SW[0]
+set_location_assignment PIN_AB28 -to reset
+
 
 set_global_assignment -name LAST_QUARTUS_VERSION "16.1.0 Lite Edition"
 set_global_assignment -name RESERVE_ALL_UNUSED_PINS "AS INPUT TRI-STATED WITH WEAK PULL-UP"

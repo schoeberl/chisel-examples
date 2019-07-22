@@ -20,9 +20,9 @@ class Hello extends Module {
     val led = Output(UInt(1.W))
   })
   val CNT_MAX = (50000000 / 2 - 1).U;
-  
-  val cntReg = Reg(UInt(32.W))
-  val blkReg = Reg(UInt(1.W))
+
+  val cntReg = RegInit(0.U(32.W))
+  val blkReg = RegInit(0.U(1.W))
 
   cntReg := cntReg + 1.U
   when(cntReg === CNT_MAX) {
