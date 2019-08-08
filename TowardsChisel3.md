@@ -195,6 +195,11 @@ Rewrite the code, see also
  * https://github.com/freechipsproject/chisel3/issues/244
  * https://github.com/freechipsproject/chisel3/issues/878
 
+## BlackBox
+
+BlackBox have no compatibility mode and need be changed on the switch,
+see also https://github.com/freechipsproject/chisel3/issues/951
+
 
 ## Notes
 
