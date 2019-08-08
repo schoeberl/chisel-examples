@@ -13,9 +13,11 @@ more advanced and needs additional steps.
  * Move to the latest version of Chisel2 (2.2.38) and check that everything works as expected
  * Mandatory changes:
    * Use ```Wire()```
+   * Don't forget Wire on Vec of combinational logic
  * Start to use some actual features, such as:
    * Input/Output is already available, but not UInt(8.W), so use UInt(width = 8) for now
    * nicer constants are available, such as 0.U
+ * Use RegInit and RegNext
  * Install verilator, if not yet done
 
 ## The Switch
