@@ -14,6 +14,7 @@ more advanced and needs additional steps.
  * Mandatory changes:
    * Use ```Wire()```
    * Don't forget Wire on Vec of combinational logic
+   * Vec(seq) does not work, use VecInit(seq)
  * Start to use some actual features, such as:
    * Input/Output is already available, but not UInt(8.W), so use UInt(width = 8) for now
    * nicer constants are available, such as 0.U

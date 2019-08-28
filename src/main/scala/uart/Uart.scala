@@ -13,7 +13,7 @@ import chisel3._
 import chisel3.util._
 
 /**
- * This is a minimal AXI style data plus handshake channel.
+ * This is a minimal data channel with a ready/valid handshake.
  */
 class Channel extends Bundle {
   val data = Input(Bits(8.W))
@@ -41,7 +41,6 @@ class Tx(frequency: Int, baudRate: Int) extends Module {
   io.channel.ready := (cntReg === 0.U) && (bitsReg === 0.U)
   io.txd := shiftReg(0)
 
-  // TODO: make the counter a tick generator
   when(cntReg === 0.U) {
 
     cntReg := BIT_CNT
@@ -61,8 +60,6 @@ class Tx(frequency: Int, baudRate: Int) extends Module {
   }.otherwise {
     cntReg := cntReg - 1.U
   }
-
-  // debug(shiftReg)
 }
 
 /**
@@ -76,7 +73,7 @@ class Tx(frequency: Int, baudRate: Int) extends Module {
 class Rx(frequency: Int, baudRate: Int) extends Module {
   val io = IO(new Bundle {
     val rxd = Input(Bits(1.W))
-    val channel = new Channel().flip
+    val channel = Flipped(new Channel())
   })
 
   val BIT_CNT = ((frequency + baudRate / 2) / baudRate - 1).U
@@ -105,7 +102,7 @@ class Rx(frequency: Int, baudRate: Int) extends Module {
     bitsReg := 8.U
   }
 
-  when(io.channel.ready) {
+  when(valReg && io.channel.ready) {
     valReg := false.B
   }
 
@@ -114,7 +111,7 @@ class Rx(frequency: Int, baudRate: Int) extends Module {
 }
 
 /**
- * A single byte buffer with an AXI style channel
+ * A single byte buffer with a ready/valid interface
  */
 class Buffer extends Module {
   val io = IO(new Bundle {
@@ -134,7 +131,7 @@ class Buffer extends Module {
       dataReg := io.in.data
       stateReg := full
     }
-  }.otherwise { // full, io.out.valid := true
+  }.otherwise { // full
     when(io.out.ready) {
       stateReg := empty
     }
@@ -159,7 +156,7 @@ class BufferedTx(frequency: Int, baudRate: Int) extends Module {
 }
 
 /**
- * Send 'hello'.
+ * Send a string.
  */
 class Sender(frequency: Int, baudRate: Int) extends Module {
   val io = IO(new Bundle {
@@ -170,16 +167,16 @@ class Sender(frequency: Int, baudRate: Int) extends Module {
 
   io.txd := tx.io.txd
 
-  // This is not super elegant
-  val hello = Array[UInt]('H'.U, 'e'.U, 'l'.U, 'l'.U, 'o'.U)
-  val text = Vec(hello)
+  val msg = "Hello World!"
+  val text = VecInit(msg.map(_.U))
+  val len = msg.length.U
 
-  val cntReg = RegInit(0.U(3.W))
+  val cntReg = RegInit(0.U(8.W))
 
   tx.io.channel.data := text(cntReg)
-  tx.io.channel.valid := cntReg =/= 5.U
+  tx.io.channel.valid := cntReg =/= len
 
-  when(tx.io.channel.ready && cntReg =/= 5.U) {
+  when(tx.io.channel.ready && cntReg =/= len) {
     cntReg := cntReg + 1.U
   }
 }
@@ -187,7 +184,7 @@ class Sender(frequency: Int, baudRate: Int) extends Module {
 class Echo(frequency: Int, baudRate: Int) extends Module {
   val io = IO(new Bundle {
     val txd = Output(Bits(1.W))
-    val rxd = Output(Bits(1.W))
+    val rxd = Input(Bits(1.W))
   })
   // io.txd := RegNext(io.rxd)
   val tx = Module(new BufferedTx(frequency, baudRate))
@@ -195,8 +192,6 @@ class Echo(frequency: Int, baudRate: Int) extends Module {
   io.txd := tx.io.txd
   rx.io.rxd := io.rxd
   tx.io.channel <> rx.io.channel
-  tx.io.channel.valid := true.B
-  // tx.io.channel.data := 'H'.U
 }
 
 class UartMain(frequency: Int, baudRate: Int) extends Module {
@@ -204,11 +199,18 @@ class UartMain(frequency: Int, baudRate: Int) extends Module {
     val rxd = Input(Bits(1.W))
     val txd = Output(Bits(1.W))
   })
-  
-  val u = Module(new Sender(frequency, baudRate))
-  // val u = Module(new Echo(frequency, baudRate))
-  io.txd := u.io.txd
-  // u.io.rxd := io.rxd
+
+  val doSender = true
+
+  if (doSender) {
+    val s = Module(new Sender(frequency, baudRate))
+    io.txd := s.io.txd
+  } else {
+    val e = Module(new Echo(frequency, baudRate))
+    e.io.rxd := io.rxd
+    io.txd := e.io.txd
+  }
+
 }
 
 object UartMain extends App {
