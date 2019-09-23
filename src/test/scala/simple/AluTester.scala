@@ -1,12 +1,3 @@
-/*
- * Copyright: 2014, Technical University of Denmark, DTU Compute
- * Author: Martin Schoeberl (martin@jopdesign.com)
- * License: Simplified BSD License
- * 
- * An ALU is a minimal start for a processor.
- * 
- */
-
 package simple
 
 import chisel3._

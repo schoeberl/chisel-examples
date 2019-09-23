@@ -1,10 +1,6 @@
 /*
  * This code is a minimal hardware described in Chisel.
  * 
- * Copyright: 2013, Technical University of Denmark, DTU Compute
- * Author: Martin Schoeberl (martin@jopdesign.com)
- * License: Simplified BSD License
- * 
  * Blinking LED: the FPGA version of Hello World
  */
 

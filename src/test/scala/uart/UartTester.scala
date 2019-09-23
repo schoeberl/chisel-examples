@@ -1,9 +1,5 @@
 /*
- * Copyright: 2014, Technical University of Denmark, DTU Compute
- * Author: Martin Schoeberl (martin@jopdesign.com)
- * License: Simplified BSD License
- * 
- * A UART is a serial port, also called an RS232 interface.
+ * Test the UART.
  * 
  */
 

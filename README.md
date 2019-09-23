@@ -17,7 +17,7 @@ The rest of the examples are rooted in the current folder.
 
 # Needed Tools
 
- * A recent version of Java
+ * A recent version of Java (JDK 1.8)
 
  * The Scala build tool [sbt](http://www.scala-sbt.org/)
 

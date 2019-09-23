@@ -1,11 +1,4 @@
-/*
- * Copyright: 2014, Technical University of Denmark, DTU Compute
- * Author: Martin Schoeberl (martin@jopdesign.com)
- * License: Simplified BSD License
- *
- * Play with FIFO buffers.
- *
- */
+
 
 package advanced
 

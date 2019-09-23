@@ -1,13 +1,5 @@
 /*
  * Tester for the FSM example Knight Rider.
- * including slow frequency tick generation and
-
- * This code is part of the Chisel examples.
- * 
- * Copyright: 2015, Technical University of Denmark, DTU Compute
- * Author: Martin Schoeberl (martin@jopdesign.com)
- * License: Simplified BSD License
- * 
  */
 
 package simple

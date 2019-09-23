@@ -1,8 +1,4 @@
 /*
- * Copyright: 2015, Technical University of Denmark, DTU Compute
- * Author: Martin Schoeberl (martin@jopdesign.com)
- * License: Simplified BSD License
- * 
  * A simple counter example with configurable bit width and with a test bench.
  * 
  */
