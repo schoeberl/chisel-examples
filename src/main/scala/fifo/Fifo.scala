@@ -1,6 +1,7 @@
 package fifo
 
-import Chisel._
+import chisel3._
+import chisel3.util._
 
 class FifoIO[T <: Data](private val gen: T) extends Bundle {
   val enq = Flipped(new DecoupledIO(gen))

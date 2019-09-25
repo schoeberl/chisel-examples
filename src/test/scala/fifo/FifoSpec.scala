@@ -75,14 +75,24 @@ class FifoTester[T <: Fifo[_ <: Data]](dut: T) extends PeekPokeTester(dut) {
   }
   val cycles = 100.0 / cnt
   println(s"$cnt words in 100 clock cycles, $cycles clock cycles per word")
-  assert(cycles > 1, "Need more than one clock cycle per word")
+  assert(cycles >= 0.99, "Cannot be faster than one clock cycle per word")
 }
 
 class FifoSpec extends FlatSpec with Matchers {
 
+  /*
   "BubbleFifo" should "pass" in {
     chisel3.iotesters.Driver.execute(Array("--target-dir", "generated", "--fint-write-vcd"),
       () => new BubbleFifo(UInt(16.W), 4)) { c =>
+      new FifoTester(c)
+    } should be (true)
+  }
+
+
+   */
+  "DoubleBufferFifo" should "pass" in {
+    chisel3.iotesters.Driver.execute(Array("--target-dir", "generated", "--fint-write-vcd"),
+      () => new DoubleBufferFifo(UInt(16.W), 4)) { c =>
       new FifoTester(c)
     } should be (true)
   }

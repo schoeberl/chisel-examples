@@ -1,33 +1,28 @@
 package fifo
 
 import chisel3._
-import chisel3.util._
 
 class BubbleFifo[T <: Data](gen: T, depth: Int) extends Fifo(gen: T, depth: Int) {
 
   private class Buffer[T <: Data](gen: T) extends Module {
     val io = IO(new FifoIO(gen))
 
-    val empty :: full :: Nil = Enum(2)
-    val stateReg = RegInit(empty)
+    val fullReg = RegInit(false.B)
     val dataReg = Reg(gen)
 
-    switch(stateReg) {
-      is (empty) {
-        when (io.enq.valid) {
-          stateReg := full
-          dataReg := io.enq.bits
-        }
+    when (fullReg) {
+      when (io.deq.ready) {
+        fullReg := false.B
       }
-      is (full) {
-        when (io.deq.ready) {
-          stateReg := empty
-        }
+    } .otherwise {
+      when (io.enq.valid) {
+        fullReg := true.B
+        dataReg := io.enq.bits
       }
     }
 
-    io.enq.ready := (stateReg === empty)
-    io.deq.valid := (stateReg === full)
+    io.enq.ready := !fullReg
+    io.deq.valid := fullReg
     io.deq.bits := dataReg
   }
 
