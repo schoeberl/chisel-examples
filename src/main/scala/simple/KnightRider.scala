@@ -17,11 +17,12 @@ import chisel3.util._
 /**
  * Do some fancy blinking.
   *
-  * TODO: find out the new way to have a reset signal
+  *
  */
+// TODO: find out the new way to have a reset signal
 class KnightRider(resetSignal: Bool = null, frequ: Int)
-    extends Module(_reset = resetSignal) {
-    // extends Module {
+    //extends Module(_reset = resetSignal) {
+     extends Module {
   val io = IO(new Bundle {
     val led = Output(Bits(6.W))
   })
