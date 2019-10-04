@@ -82,15 +82,23 @@ class FifoSpec extends FlatSpec with Matchers {
 
   /*
   "BubbleFifo" should "pass" in {
-    chisel3.iotesters.Driver.execute(Array("--target-dir", "generated", "--fint-write-vcd"),
+    chisel3.iotesters.Driver.execute(Array("--target-dir", "generated", "--generate-vcd-output", "on"),
       () => new BubbleFifo(UInt(16.W), 4)) { c =>
       new FifoTester(c)
     } should be (true)
   }
 
   "DoubleBufferFifo" should "pass" in {
-    chisel3.iotesters.Driver.execute(Array("--target-dir", "generated", "--fint-write-vcd"),
+    chisel3.iotesters.Driver.execute(Array("--target-dir", "generated", "--generate-vcd-output", "on"),
       () => new DoubleBufferFifo(UInt(16.W), 4)) { c =>
+      new FifoTester(c)
+    } should be (true)
+  }
+
+
+  "RegFifo" should "pass" in {
+    chisel3.iotesters.Driver.execute(Array("--target-dir", "generated", "--generate-vcd-output", "on"),
+      () => new RegFifo(UInt(16.W), 4)) { c =>
       new FifoTester(c)
     } should be (true)
   }
@@ -98,14 +106,13 @@ class FifoSpec extends FlatSpec with Matchers {
    */
 
 
-  "RegFifo" should "pass" in {
-    chisel3.iotesters.Driver.execute(Array("--tr-write-vcd"),
-      // chisel3.iotesters.Driver.execute(Array("--backend-name", "firrtl", "--fint-write-vcd"),
-        //    chisel3.iotesters.Driver.execute(Array("--target-dir", "generated", "--fint-write-vcd"),
-      () => new RegFifo(UInt(16.W), 4)) { c =>
+  "MemFifo" should "pass" in {
+    chisel3.iotesters.Driver.execute(Array("--target-dir", "generated", "--generate-vcd-output", "on"),
+      () => new MemFifo(UInt(16.W), 4)) { c =>
       new FifoTester(c)
     } should be (true)
   }
+
 
 }
 
