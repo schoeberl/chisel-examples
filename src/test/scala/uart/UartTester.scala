@@ -26,7 +26,7 @@ class TxTester(dut: Tx) extends PeekPokeTester(dut) {
 }
 
 object TxTester extends App {
-  iotesters.Driver.execute(Array("--fint-write-vcd"), () => new Tx(10000, 3000)) {
+  iotesters.Driver.execute(Array("--target-dir", "generated", "--generate-vcd-output", "on"), () => new Tx(10000, 3000)) {
     c => new TxTester(c)
   }
 }
@@ -50,7 +50,7 @@ class BufferedTxTester(dut: BufferedTx) extends PeekPokeTester(dut) {
 }
 
 object BufferedTxTester extends App {
-  iotesters.Driver.execute(Array("--fint-write-vcd"), () => new BufferedTx(10000, 3000)) {
+  iotesters.Driver.execute(Array("--target-dir", "generated", "--generate-vcd-output", "on"), () => new BufferedTx(10000, 3000)) {
     c => new BufferedTxTester(c)
   }
 }
@@ -63,7 +63,7 @@ class SenderTester(dut: Sender) extends PeekPokeTester(dut) {
 
 
 object SenderTester extends App {
-  iotesters.Driver.execute(Array("--fint-write-vcd"), () => new Sender(10000, 3000)) {
+  iotesters.Driver.execute(Array("--target-dir", "generated", "--generate-vcd-output", "on"), () => new Sender(10000, 3000)) {
     c => new SenderTester(c)
   }
 }
@@ -87,7 +87,7 @@ class RxTester(dut: Rx) extends PeekPokeTester(dut) {
 }
 
 object RxTester extends App {
-  iotesters.Driver.execute(Array("--fint-write-vcd"), () => new Rx(10000, 3000)) {
+  iotesters.Driver.execute(Array("--target-dir", "generated", "--generate-vcd-output", "on"), () => new Rx(10000, 3000)) {
     c => new RxTester(c)
   }
 }
