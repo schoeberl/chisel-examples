@@ -4,9 +4,11 @@ import chisel3._
 import chisel3.iotesters.PeekPokeTester
 import org.scalatest._
 
+object FifoTester {
+  val param = Array("--target-dir", "generated", "--generate-vcd-output", "on")
+}
+
 class FifoTester[T <: Fifo[_ <: Data]](dut: T) extends PeekPokeTester(dut) {
-// class FifoTester[D <: Data, T[_ <: Data] <: Fifo[_]](dut: T[D]) extends PeekPokeTester(dut) {
-// class FifoTester(dut: BubbleFifo[UInt]) extends PeekPokeTester(dut) {
 
   // some defaults for all signals
   poke(dut.io.enq.bits.asUInt(), 0xab)
@@ -62,7 +64,7 @@ class FifoTester[T <: Fifo[_ <: Data]](dut: T) extends PeekPokeTester(dut) {
     step(1)
   }
 
-  // now do the speed test
+  // Do the speed test
   poke(dut.io.enq.valid, 1)
   poke(dut.io.deq.ready, 1)
   cnt = 0
@@ -80,39 +82,40 @@ class FifoTester[T <: Fifo[_ <: Data]](dut: T) extends PeekPokeTester(dut) {
 
 class FifoSpec extends FlatSpec with Matchers {
 
-  /*
   "BubbleFifo" should "pass" in {
-    chisel3.iotesters.Driver.execute(Array("--target-dir", "generated", "--generate-vcd-output", "on"),
+    chisel3.iotesters.Driver.execute(FifoTester.param,
       () => new BubbleFifo(UInt(16.W), 4)) { c =>
       new FifoTester(c)
     } should be (true)
   }
 
   "DoubleBufferFifo" should "pass" in {
-    chisel3.iotesters.Driver.execute(Array("--target-dir", "generated", "--generate-vcd-output", "on"),
+    chisel3.iotesters.Driver.execute(FifoTester.param,
       () => new DoubleBufferFifo(UInt(16.W), 4)) { c =>
       new FifoTester(c)
     } should be (true)
   }
 
-
   "RegFifo" should "pass" in {
-    chisel3.iotesters.Driver.execute(Array("--target-dir", "generated", "--generate-vcd-output", "on"),
+    chisel3.iotesters.Driver.execute(FifoTester.param,
       () => new RegFifo(UInt(16.W), 4)) { c =>
       new FifoTester(c)
     } should be (true)
   }
 
-   */
-
-
   "MemFifo" should "pass" in {
-    chisel3.iotesters.Driver.execute(Array("--target-dir", "generated", "--generate-vcd-output", "on"),
+    chisel3.iotesters.Driver.execute(FifoTester.param,
       () => new MemFifo(UInt(16.W), 4)) { c =>
       new FifoTester(c)
     } should be (true)
   }
 
+  "CombFifo" should "pass" in {
+    chisel3.iotesters.Driver.execute(FifoTester.param,
+      () => new CombFifo(UInt(16.W), 4)) { c =>
+      new FifoTester(c)
+    } should be (true)
+  }
 
 }
 

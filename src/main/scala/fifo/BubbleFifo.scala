@@ -2,6 +2,10 @@ package fifo
 
 import chisel3._
 
+/**
+  * A simple bubble FIFO.
+  * Maximum throughput is one word every two clock cycles.
+  */
 class BubbleFifo[T <: Data](gen: T, depth: Int) extends Fifo(gen: T, depth: Int) {
 
   private class Buffer[T <: Data](gen: T) extends Module {

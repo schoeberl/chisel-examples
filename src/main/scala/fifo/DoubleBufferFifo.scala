@@ -3,6 +3,11 @@ package fifo
 import chisel3._
 import chisel3.util._
 
+/**
+  * Double buffer FIFO.
+  * Maximum throughput is one word per clock cycle.
+  * Each stage has a shadow buffer to handle the downstream full.
+  */
 class DoubleBufferFifo[T <: Data](gen: T, depth: Int) extends Fifo(gen: T, depth: Int) {
 
   private class DoubleBuffer[T <: Data](gen: T) extends Module {

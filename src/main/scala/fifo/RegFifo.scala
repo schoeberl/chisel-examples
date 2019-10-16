@@ -3,6 +3,9 @@ package fifo
 import chisel3._
 import chisel3.util._
 
+/**
+  * FIFO with read and write pointer using dedicated registers as memory.
+  */
 class RegFifo[T <: Data](gen: T, depth: Int) extends Fifo(gen: T, depth: Int) {
 
   def counter(depth: Int, incr: Bool): (UInt, UInt) = {

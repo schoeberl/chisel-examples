@@ -3,6 +3,10 @@ package fifo
 import chisel3._
 import chisel3.util._
 
+/**
+  * FIFO with memory and read and write pointers.
+  * Extra shadow register to handle the one cycle latency of the synchronous memory.
+  */
 class MemFifo[T <: Data](gen: T, depth: Int) extends Fifo(gen: T, depth: Int) {
 
   def counter(depth: Int, incr: Bool): (UInt, UInt) = {
@@ -37,17 +41,7 @@ class MemFifo[T <: Data](gen: T, depth: Int) extends Fifo(gen: T, depth: Int) {
 
   val data = mem.read(readPtr)
 
-  /*
-  when (io.deq.ready && !emptyReg) {
-    fullReg := false.B
-    emptyReg := nextRead === writePtr
-    incrRead := true.B
-  }
-   */
-
-  // TODO: read has one cycle latency. How to deal with this?
-  // Maybe just add output register and read ahead
-
+  // Handling of the one cycle memory latency with an additional output register
   switch(stateReg) {
     is(idle) {
       when(!emptyReg) {
@@ -87,7 +81,6 @@ class MemFifo[T <: Data](gen: T, depth: Int) extends Fifo(gen: T, depth: Int) {
       }
     }
   }
-
 
   io.deq.bits :=  Mux(stateReg === valid, data, shadowReg)
   io.enq.ready := !fullReg
