@@ -52,11 +52,11 @@ class DoubleBufferFifo[T <: Data](gen: T, depth: Int) extends Fifo(gen: T, depth
     io.deq.bits := dataReg
   }
 
-  private val buffers = Array.fill(depth/2) { Module(new DoubleBuffer(gen)) }
+  private val buffers = Array.fill((depth+1)/2) { Module(new DoubleBuffer(gen)) }
 
-  for (i <- 0 until depth/2 - 1) {
+  for (i <- 0 until (depth+1)/2 - 1) {
     buffers(i + 1).io.enq <> buffers(i).io.deq
   }
   io.enq <> buffers(0).io.enq
-  io.deq <> buffers(depth/2 - 1).io.deq
+  io.deq <> buffers((depth+1)/2 - 1).io.deq
 }
