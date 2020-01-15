@@ -31,23 +31,14 @@ class Debounce(fac: Int = 100000000/100) extends Module {
 
   val btnSync = sync(io.btnU)
 
-  /*
-  val FAC = 100000000/100
-  */
-
-  val FAC = fac
-  val tick = tickGen(FAC)
-
+  val tick = tickGen(fac)
   val btnDeb = Reg(Bool())
   when (tick) {
     btnDeb := btnSync
   }
 
   val btnFilter = filter(btnDeb, tick)
-
-  val btn = btnFilter
-
-  val risingEdge = rising(btn)
+  val risingEdge = rising(btnFilter)
 
   // Use the rising edge of the debounced button
   // to count up
