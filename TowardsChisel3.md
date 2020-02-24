@@ -118,6 +118,17 @@ so one can move to Input/Output/IO in Chisel 2 and switch.
 Wires need to be wrapped into a ```Wire()```, even in the compatibility
 mode. But this can also be done in 2.2.38.
 
+## Compatibility Error
+
+Following expression generates different values in Chisel 2 and Chisel 3:
+
+```
+Cat(1.U, Bits("b00"))
+```
+
+It is 4 in Chisel 2 and 2 in Chisel 3. Solution is to have the width explicitly,
+e.g., ```0.U(2.W)```.
+
 ## Further Changes for Chisel 3 (Compatibility Issues)
 
 One issues in the examples:
