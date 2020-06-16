@@ -3,7 +3,8 @@
 I will take notes along the way when moving this example collection
 to Chisel 3.
 
-See also [Chisel2 vs. Chisel3](https://github.com/freechipsproject/chisel3/wiki/Chisel3-vs-Chisel2).
+See also [Chisel2 vs. Chisel3](https://github.com/freechipsproject/chisel3/wiki/Chisel3-vs-Chisel2)
+and [prepare for the switch](https://github.com/ucb-bar/chisel2-deprecated#chisel3)
 
 Not all steps will be needed for all projects. And maybe your project is
 more advanced and needs additional steps.
