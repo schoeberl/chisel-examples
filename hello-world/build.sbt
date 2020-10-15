@@ -1,5 +1,6 @@
+scalaVersion := "2.12.8"
 
-scalaVersion := "2.11.7"
+scalacOptions := Seq("-Xsource:2.11")
 
 // libraryDependencies += "edu.berkeley.cs" %% "chisel" % "latest.release"
 
