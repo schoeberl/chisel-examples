@@ -126,5 +126,5 @@ class KnightTop extends Module {
 }
 
 object KnightMain extends App {
-  chisel3.Driver.execute(Array("--target-dir", "generated"), () => new KnightTop())
+  (new chisel3.stage.ChiselStage).emitVerilog(new KnightTop(), Array("--target-dir", "generated"))
 }

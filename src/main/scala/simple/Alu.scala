@@ -62,9 +62,10 @@ class AluTop extends Module {
   io.led := alu.io.result
 }
 
-// Generate the Verilog code by invoking the Driver
+// Generate the Verilog code
 object AluMain extends App {
   println("Generating the ALU hardware")
-  chisel3.Driver.execute(Array("--target-dir", "generated"), () => new AluTop())
+  (new chisel3.stage.ChiselStage).emitVerilog(new AluTop(), Array("--target-dir", "generated"))
+
 }
 
