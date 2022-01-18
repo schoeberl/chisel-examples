@@ -1,31 +1,25 @@
 package util
 
-import chisel3.iotesters.PeekPokeTester
-import chisel3.iotesters.Driver
-import org.scalatest._
+import chisel3._
+import chiseltest._
+import org.scalatest.flatspec.AnyFlatSpec
 
 
-class DebounceSpec extends FlatSpec with Matchers {
+class DebounceSpec extends AnyFlatSpec with ChiselScalatestTester {
+
   "Debounce test" should "pass" in {
     val FAC = 100
-    Driver.execute(Array("--generate-vcd-output", "on"), () => new Debounce(FAC)) {
-      c => new PeekPokeTester(c) {
-        poke(c.io.btnU, 0)
-        step(3)
-        expect(c.io.led, 0)
-        step(FAC/3)
-        poke(c.io.btnU, 1)
-        step(FAC/30)
-        poke(c.io.btnU, 0)
-        step(FAC/30)
-        poke(c.io.btnU, 1)
-        step(FAC)
-        // expect(c.io.led, 1)
-        expect(c.io.led, 0)
-        step(FAC)
-        expect(c.io.led, 0)
-        step(FAC)
-      }
-    } should be (true)
+    test(new Debounce(FAC)) { dut =>
+      dut.io.btnU.poke(false.B)
+      dut.clock.step(3)
+      dut.io.led.expect(0.U)
+      dut.clock.step(FAC/3)
+      dut.io.btnU.poke(true.B)
+      dut.clock.step(FAC/30)
+      dut.io.btnU.poke(false.B)
+      dut.clock.step(FAC/30)
+      dut.io.btnU.poke(true.B)
+      dut.clock.step(FAC)
+    }
   }
 }

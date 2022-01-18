@@ -5,26 +5,21 @@
 
 package simple
 
-import chisel3._
-import chisel3.iotesters.PeekPokeTester
+import chiseltest._
+import org.scalatest.flatspec.AnyFlatSpec
 
 /**
  * Test the counter by printing out the value at each clock cycle.
  */
-class CounterTester(c: Counter) extends PeekPokeTester(c) {
 
-  for (i <- 0 until 5) {
-    println(i.toString + ": " + peek(c.io.out).toString())
-    step(1)
-  }
-}
+class CounterTester extends AnyFlatSpec with ChiselScalatestTester {
 
-/**
- * Create a counter and a tester.
- */
-object CounterTester extends App {
-
-  iotesters.Driver.execute(Array[String](), () => new Counter(2)) {
-    c => new CounterTester(c)
+  "CounterTester test" should "pass" in {
+    test(new Counter(2)) { dut =>
+      for (i <- 0 until 5) {
+        println(i.toString + ": " + dut.io.out.peek.toString())
+        dut.clock.step(1)
+      }
+    }
   }
 }

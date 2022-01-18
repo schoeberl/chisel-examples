@@ -4,25 +4,20 @@
 
 package simple
 
-import chisel3._
-import chisel3.iotesters.PeekPokeTester
+import chiseltest._
+import org.scalatest.flatspec.AnyFlatSpec
 
 /**
  * A simple tester that just runs some ticks
  */
-class KnightTester(dut: KnightRider) extends PeekPokeTester(dut) {
+class KnightTester extends AnyFlatSpec with ChiselScalatestTester {
 
-  for (i <- 0 until 30) {
-    println(peek(dut.io.led).toString())
-    step(1)
-  }
-}
-
-/**
- * Run the tests at a lower frequency.
- */
-object KnightTester extends App {
-  iotesters.Driver.execute(Array[String](), () => new KnightRider(null, 12)) {
-    c => new KnightTester(c)
+  "CounterTester test" should "pass" in {
+    test(new KnightRider(null, 12)) { dut =>
+      for (i <- 0 until 30) {
+        println(dut.io.led.peek.toString())
+        dut.clock.step(1)
+      }
+    }
   }
 }

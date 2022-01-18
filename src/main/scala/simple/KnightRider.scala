@@ -61,7 +61,7 @@ class Tick(frequ: Int) extends Module {
   val io = IO(new Bundle {
     val tick = Output(Bits(1.W))
   })
-  val CNT_MAX = (frequ / 6 - 1).asUInt()
+  val CNT_MAX = (frequ / 6 - 1).asUInt
 
   val r1 = RegInit(0.U(32.W))
 
@@ -111,7 +111,7 @@ class KnightTop extends Module {
   })
 
   // Invert the reset button and two flip-flop input synchronization
-  val manReset = (~io.btn(3)).toBool
+  val manReset = (~io.btn(3)).asBool
   val syncBtn = RegNext(RegNext(manReset))
 
   val resGen = Module(new ResetGen())

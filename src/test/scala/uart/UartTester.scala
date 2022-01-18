@@ -4,87 +4,76 @@
  */
 
 package uart
-
 import chisel3._
-import chisel3.iotesters.PeekPokeTester
+import chiseltest._
+import org.scalatest.flatspec.AnyFlatSpec
 
-class TxTester(dut: Tx) extends PeekPokeTester(dut) {
+class UartTxTests extends AnyFlatSpec with ChiselScalatestTester {
+  "UartTx" should "work" in {
+    test(new Tx(10000, 3000)) { dut =>
+      dut.clock.step(2)
+      // ready/valid handshake the first character
+      dut.io.channel.valid.poke(true.B)
+      dut.io.channel.bits.poke('a'.toInt.U)
+      while (!dut.io.channel.ready.peek().litToBoolean) {
+        dut.clock.step(1)
+      }
+      dut.clock.step(1)
+      dut.io.channel.valid.poke(false.B)
+      dut.io.channel.bits.poke(0.U)
 
-  step(2)
-  // ready/valid handshake the first character
-  poke(dut.io.channel.valid, 1)
-  poke(dut.io.channel.bits, 'a')
-  while (peek(dut.io.channel.ready) == 0) {
-    step(1)
-  }
-  step(1)
-  poke(dut.io.channel.valid, 0)
-  poke(dut.io.channel.bits, 0)
+      // wait for start bit
+      while (dut.io.txd.peek().litValue != 0) {
+        dut.clock.step(1)
+      }
+      // to the first bit
+      dut.clock.step(3)
 
-  // wait for start bit
-  while (peek(dut.io.txd) != 0) {
-    step(1)
-  }
-  // to the first bit
-  step(3)
-
-  for (i <- 0 until 8) {
-    expect(dut.io.txd, (('A'.toInt >> i) & 0x01))
-    step(3)
-  }
-  // stop bit
-  expect(dut.io.txd, 1)
-}
-
-object TxTester extends App {
-  iotesters.Driver.execute(Array("--target-dir", "generated", "--generate-vcd-output", "on"), () => new Tx(10000, 3000)) {
-    c => new TxTester(c)
+      for (i <- 0 until 8) {
+        dut.io.txd.expect((('a'.toInt >> i) & 0x01).U)
+        dut.clock.step(3)
+      }
+      // stop bit
+      dut.io.txd.expect(1.U)
+    }
   }
 }
 
-
-class SenderTester(dut: Sender) extends PeekPokeTester(dut) {
-
-  step(300)
-}
-
-object SenderTester extends App {
-  iotesters.Driver.execute(Array("--target-dir", "generated", "--generate-vcd-output", "on"), () => new Sender(10000, 3000)) {
-    c => new SenderTester(c)
+class UartSenderTests extends AnyFlatSpec with ChiselScalatestTester {
+  "UartSender" should "work" in {
+    test(new Sender(10000, 3000)) { dut =>
+      dut.clock.step(300)
+    }
   }
 }
 
-class RxTester(dut: Rx) extends PeekPokeTester(dut) {
+class UartRxTests extends AnyFlatSpec with ChiselScalatestTester {
+  "UartRx" should "work" in {
+    test(new Rx(10000, 3000)) { dut =>
+      dut.io.rxd.poke(1.U)
+      dut.clock.step(10)
+      // start bit
+      dut.io.rxd.poke(0.U)
+      dut.clock.step(3)
+      // 8 data bits
+      for (i <- 0 until 8) {
+        dut.io.rxd.poke(((0xa5 >> i) & 0x01).U)
+        dut.clock.step(3)
+      }
+      // stop bit
+      dut.io.rxd.poke(1.U)
+      while (!dut.io.channel.valid.peek().litToBoolean) {
+        // wait on valid
+        dut.clock.step(1)
+      }
+      dut.io.channel.bits.expect(0xa5.U)
 
-  poke(dut.io.rxd, 1)
-  step(10)
-  // start bit
-  poke(dut.io.rxd, 0)
-  step(3)
-  // 8 data bits
-  for (i <- 0 until 8) {
-    poke(dut.io.rxd, (0xa5.toInt >> i) & 0x01)
-    step(3)
-  }
-  // stop bit
-  poke(dut.io.rxd, 1)
-  while(peek(dut.io.channel.valid) == 0) {
-    // wait on valid
-    step(1)
-    println("wait")
-  }
-  expect(dut.io.channel.bits, 0xa5.toInt)
-
-  // read it out
-  poke(dut.io.channel.ready, 1)
-  step(1)
-  poke(dut.io.channel.ready, 0)
-  step(5)
-
-}
-
-object RxTester extends App {
-  iotesters.Driver.execute(Array("--target-dir", "generated", "--generate-vcd-output", "on"), () => new Rx(10000, 3000)) {
-    c => new RxTester(c)
+      // read it out
+      dut.io.channel.ready.poke(true.B)
+      dut.clock.step(1)
+      dut.io.channel.ready.poke(false.B)
+      dut.clock.step(5)
+    }
   }
 }
+
