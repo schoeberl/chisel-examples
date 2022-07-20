@@ -195,7 +195,6 @@ class Echo(frequency: Int, baudRate: Int) extends Module {
     val txd = Output(UInt(1.W))
     val rxd = Input(UInt(1.W))
   })
-  // io.txd := RegNext(io.rxd)
   val tx = Module(new BufferedTx(frequency, baudRate))
   val rx = Module(new Rx(frequency, baudRate))
   io.txd := tx.io.txd
