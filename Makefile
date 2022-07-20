@@ -22,16 +22,16 @@ uart:
 # Generate the C++ simulation and run the tests
 
 alu-test:
-	$(SBT) "test:runMain simple.AluTester"
+	$(SBT) "testOnly simple.AluTester"
 
 counter-test:
-	$(SBT) "test:runMain simple.CounterTester"
+	$(SBT) "testOnly simple.CounterTester"
 
 knight-test:
-	$(SBT) "test:runMain simple.KnightTester"
+	$(SBT) "testOnly simple.KnightTester"
 
 fifo-test:
-	$(SBT) "test:runMain simple.FifoTester"
+	$(SBT) "testOnly fifo.FifoSpec"
 
 fifo-view:
 	gtkwave generated/simple.FifoTester823761309/BubbleFifo.vcd --save=bubble.gtkw
