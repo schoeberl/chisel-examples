@@ -45,16 +45,17 @@ class Tx(frequency: Int, baudRate: Int) extends Module {
       val shift = shiftReg >> 1
       shiftReg := 1.U ## shift(9, 0)
       bitsReg := bitsReg - 1.U
-    }.otherwise {
+    } .otherwise {
       when(io.channel.valid) {
-        shiftReg := Cat(Cat(3.U, io.channel.bits), 0.U) // two stop bits, data, one start bit
+        // two stop bits, data, one start bit
+        shiftReg := 3.U ## io.channel.bits ## 0.U
         bitsReg := 11.U
-      }.otherwise {
+      } .otherwise {
         shiftReg := 0x7ff.U
       }
     }
 
-  }.otherwise {
+  } .otherwise {
     cntReg := cntReg - 1.U
   }
 }
@@ -88,7 +89,7 @@ class Rx(frequency: Int, baudRate: Int) extends Module {
 
   when(cntReg =/= 0.U) {
     cntReg := cntReg - 1.U
-  }.elsewhen(bitsReg =/= 0.U) {
+  } .elsewhen(bitsReg =/= 0.U) {
     cntReg := BIT_CNT
     shiftReg := rxReg ## (shiftReg >> 1)
     bitsReg := bitsReg - 1.U
@@ -96,7 +97,7 @@ class Rx(frequency: Int, baudRate: Int) extends Module {
     when(bitsReg === 1.U) {
       valReg := true.B
     }
-  }.elsewhen(rxReg === 0.U) {
+  } .elsewhen(rxReg === 0.U) {
     // wait 1.5 bits after falling edge of start
     cntReg := START_CNT
     bitsReg := 8.U
@@ -133,7 +134,7 @@ class Buffer extends Module {
       dataReg := io.in.bits
       stateReg := full
     }
-  }.otherwise { // full
+  } .otherwise { // full
     when(io.out.ready) {
       stateReg := empty
     }
