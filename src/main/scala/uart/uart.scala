@@ -85,7 +85,7 @@ class Rx(frequency: Int, baudRate: Int) extends Module {
   val shiftReg = RegInit(0.U(8.W))
   val cntReg = RegInit(0.U(20.W))
   val bitsReg = RegInit(0.U(4.W))
-  val valReg = RegInit(false.B)
+  val validReg = RegInit(false.B)
 
   when(cntReg =/= 0.U) {
     cntReg := cntReg - 1.U
@@ -95,7 +95,7 @@ class Rx(frequency: Int, baudRate: Int) extends Module {
     bitsReg := bitsReg - 1.U
     // the last bit shifted in
     when(bitsReg === 1.U) {
-      valReg := true.B
+      validReg := true.B
     }
   } .elsewhen(rxReg === 0.U) {
     // wait 1.5 bits after falling edge of start
@@ -103,12 +103,12 @@ class Rx(frequency: Int, baudRate: Int) extends Module {
     bitsReg := 8.U
   }
 
-  when(valReg && io.channel.ready) {
-    valReg := false.B
+  when(validReg && io.channel.ready) {
+    validReg := false.B
   }
 
   io.channel.bits := shiftReg
-  io.channel.valid := valReg
+  io.channel.valid := validReg
 }
 //- end
 
