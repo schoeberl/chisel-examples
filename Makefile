@@ -34,7 +34,7 @@ fifo-test:
 	$(SBT) "testOnly fifo.FifoSpec"
 
 fifo-view:
-	gtkwave generated/simple.FifoTester823761309/BubbleFifo.vcd --save=bubble.gtkw
+	gtkwave test_run_dir/BubbleFifo_should_pass/BubbleFifo.vcd --save=bubble.gtkw
 
 fifo: fifo-test fifo-view
 
