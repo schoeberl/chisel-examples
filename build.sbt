@@ -8,11 +8,6 @@ scalacOptions ++= Seq(
   "-language:reflectiveCalls",
 )
 
-resolvers ++= Seq(
-  Resolver.sonatypeRepo("snapshots"),
-  Resolver.sonatypeRepo("releases")
-)
-
 // Chisel 3.5
 addCompilerPlugin("edu.berkeley.cs" % "chisel3-plugin" % "3.5.3" cross CrossVersion.full)
 libraryDependencies += "edu.berkeley.cs" %% "chisel3" % "3.5.3"
